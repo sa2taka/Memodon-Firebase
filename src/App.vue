@@ -1,57 +1,93 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
+    <v-app-bar app>
+      <v-toolbar-title
+        @click="$router.push('/')"
+        class="headline text-uppercase"
+      >
+        <span class="navbar-title">Memodon</span>
+      </v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <unauth-menu v-if="!isSignin"></unauth-menu>
+      <signing-menu v-else></signing-menu>
     </v-app-bar>
 
-    <v-content>
-      <HelloWorld />
+    <v-content id="main">
+      <router-view />
     </v-content>
   </v-app>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
-
-export default Vue.extend({
-  name: 'App',
-
+import { Component, Watch, Vue } from 'vue-property-decorator';
+import Theme from '@/store/modules/theme';
+import UnauthMenu from '@/components/NavBar/UnauthMenu.vue';
+import SigningMenu from '@/components/NavBar/SigningMenu.vue';
+@Component({
   components: {
-    HelloWorld,
+    UnauthMenu,
+    SigningMenu,
   },
-
-  data: () => ({
-    //
-  }),
-});
+})
+export default class App extends Vue {
+  public isDark: boolean = false;
+  private storageStateEntity: any = null;
+  public created() {
+    this.setTheme();
+    this.subscribeTheme();
+  }
+  @Watch('isDark')
+  public changedTheme(isDark: boolean) {
+    this.updateTheme(isDark);
+  }
+  public get isSignin() {
+    return false;
+  }
+  private setTheme() {
+    if (this.storageState) {
+      this.isDark = this.storageState.theme.theme === 'dark';
+      this.updateTheme(this.isDark);
+    }
+  }
+  private subscribeTheme() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type === 'theme/setTheme') {
+        this.isDark = mutation.payload === 'dark';
+      }
+    });
+  }
+  private updateTheme(isDark: boolean) {
+    this.$vuetify.theme.dark = isDark;
+    Theme.setTheme(isDark ? 'dark' : 'light');
+  }
+  private get storageState(): any {
+    if (this.storageStateEntity) {
+      return this.storageStateEntity;
+    }
+    try {
+      this.storageStateEntity = JSON.parse(localStorage.memodonState);
+    } catch (e) {
+      this.storageStateEntity = null;
+      return null;
+    }
+    return this.storageStateEntity;
+  }
+}
 </script>
+<style lang="scss" scoped>
+#main {
+  width: 90%;
+  position: relative;
+  margin: 0 auto;
+}
+.center-switch {
+  position: relative;
+  top: 12px;
+  margin-left: 4px;
+}
+.navbar-title {
+  user-select: none;
+  cursor: pointer;
+}
+</style>

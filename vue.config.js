@@ -1,3 +1,5 @@
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+
 module.exports = {
   transpileDependencies: ['vuetify'],
 
@@ -15,5 +17,8 @@ module.exports = {
       localeDir: 'locales',
       enableInSFC: true,
     },
+  },
+  configureWebpack: {
+    plugins: [new HardSourceWebpackPlugin()],
   },
 };
