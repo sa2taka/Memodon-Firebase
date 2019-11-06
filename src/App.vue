@@ -24,6 +24,7 @@ import { Component, Watch, Vue } from 'vue-property-decorator';
 import Theme from '@/store/modules/theme';
 import UnauthMenu from '@/components/NavBar/UnauthMenu.vue';
 import SigningMenu from '@/components/NavBar/SigningMenu.vue';
+
 @Component({
   components: {
     UnauthMenu,
