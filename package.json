@@ -24,6 +24,7 @@
     "vuex-persistedstate": "^2.5.4"
   },
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.1",
     "@kazupon/vue-i18n-loader": "^0.3.0",
     "@types/jest": "^24.0.11",
     "@types/webpack": "^4.4.0",

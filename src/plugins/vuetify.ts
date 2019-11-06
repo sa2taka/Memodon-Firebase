@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
+import '@fortawesome/fontawesome-free/css/all.css';
 import ja from 'vuetify/src/locale/ja';
+import values from './iconValues';
 
 Vue.use(Vuetify);
 
@@ -33,5 +35,9 @@ export default new Vuetify({
   lang: {
     locales: { ja },
     current: 'ja',
+  },
+  icons: {
+    iconfont: 'fa',
+    values,
   },
 });
