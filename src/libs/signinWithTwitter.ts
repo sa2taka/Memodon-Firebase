@@ -1,5 +1,7 @@
 import firebase from '@/firebase';
 import router from '@/router/index';
+import User from '@/store/modules/user';
+import { userInfo } from 'os';
 
 const provider = new firebase.auth.TwitterAuthProvider();
 
@@ -7,7 +9,7 @@ export const signinWithPopup = () => {
   return firebase
     .auth()
     .signInWithPopup(provider)
-    .then(signInWithTwitter)
+    .then(signinWithTwitter)
     .catch(handleError);
 };
 
@@ -19,15 +21,48 @@ export const getRedirectResult = () => {
   return firebase
     .auth()
     .getRedirectResult()
-    .then(signInWithTwitter)
+    .then(signinWithTwitter)
     .catch(handleError);
 };
 
-export const signInWithTwitter = (result: firebase.auth.UserCredential) => {
-  router.push('/');
-  return result;
+const signinWithTwitter = (result: firebase.auth.UserCredential) => {
+  if (!result.user) {
+    return;
+  }
+  const dbRef = createUserIntoCloud(result);
+  if (typeof dbRef === 'undefined') {
+    throw 'update error';
+  }
+  return dbRef.then(User.signIn).then(() => {
+    router.push('/');
+  });
 };
 
-export const handleError = (reason: any) => {
+const handleError = (reason: any) => {
+  console.log(reason);
   return reason;
+};
+
+const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
+  if (
+    user.user &&
+    user.additionalUserInfo &&
+    user.credential &&
+    user.user.providerData[0]
+  ) {
+    const data = {
+      twitterId: user.user.providerData[0].uid,
+      userName: user.additionalUserInfo.username,
+      displayName: user.user.displayName,
+      iconUrl: user.user.photoURL,
+      token: (user.credential as firebase.auth.OAuthCredential).accessToken,
+      secret: (user.credential as firebase.auth.OAuthCredential).secret,
+    };
+
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(user.user.uid)
+      .set(data, { merge: true });
+  }
 };

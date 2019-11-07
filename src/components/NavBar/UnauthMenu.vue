@@ -41,7 +41,7 @@ import { MinSmallWidth } from '@/libs/globalConstVariables';
 })
 export default class UnauthMenu extends Vue {
   private BoundaryWidth = MinSmallWidth;
-  private menu = true;
+  private menu = false;
 
   private singinWithTwitter() {
     if (this.isSmartphone) {

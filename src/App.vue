@@ -24,6 +24,7 @@ import { Component, Watch, Vue } from 'vue-property-decorator';
 import Theme from '@/store/modules/theme';
 import UnauthMenu from '@/components/NavBar/UnauthMenu.vue';
 import SigningMenu from '@/components/NavBar/SigningMenu.vue';
+import { getRedirectResult } from '@/libs/signinWithTwitter';
 
 @Component({
   components: {
@@ -33,10 +34,9 @@ import SigningMenu from '@/components/NavBar/SigningMenu.vue';
 })
 export default class App extends Vue {
   public isDark: boolean = false;
-  private storageStateEntity: any = null;
-  public created() {
-    this.setTheme();
+  public async created() {
     this.subscribeTheme();
+    await getRedirectResult();
   }
   @Watch('isDark')
   public changedTheme(isDark: boolean) {
@@ -44,12 +44,6 @@ export default class App extends Vue {
   }
   public get isSignin() {
     return false;
-  }
-  private setTheme() {
-    if (this.storageState) {
-      this.isDark = this.storageState.theme.theme === 'dark';
-      this.updateTheme(this.isDark);
-    }
   }
   private subscribeTheme() {
     this.$store.subscribe((mutation, state) => {
@@ -61,18 +55,6 @@ export default class App extends Vue {
   private updateTheme(isDark: boolean) {
     this.$vuetify.theme.dark = isDark;
     Theme.setTheme(isDark ? 'dark' : 'light');
-  }
-  private get storageState(): any {
-    if (this.storageStateEntity) {
-      return this.storageStateEntity;
-    }
-    try {
-      this.storageStateEntity = JSON.parse(localStorage.memodonState);
-    } catch (e) {
-      this.storageStateEntity = null;
-      return null;
-    }
-    return this.storageStateEntity;
   }
 }
 </script>
