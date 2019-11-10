@@ -1,5 +1,5 @@
 <template>
-  <nav-bar-menu>
+  <nav-bar-menu :menu="menu" @input="menu = $event">
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title>
@@ -26,10 +26,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
+import { Component, Emit, Vue } from 'vue-property-decorator';
 import NavBarMenu from '@/components/NavBar/NavBarMenu.vue';
 import DarkThemeSwitch from '@/components/Molecules/darkThemeSwitch.vue';
 import theme from '@/store/modules/theme';
+import { signinWithPopup, redirectSigninPage } from '@/libs/signinWithTwitter';
+import { MinSmallWidth } from '@/libs/globalConstVariables';
 
 @Component({
   components: {
@@ -38,7 +40,21 @@ import theme from '@/store/modules/theme';
   },
 })
 export default class UnauthMenu extends Vue {
-  private singinWithTwitter() {}
+  private BoundaryWidth = MinSmallWidth;
+  private menu = false;
+
+  private singinWithTwitter() {
+    if (this.isSmartphone) {
+      redirectSigninPage();
+    } else {
+      this.menu = false;
+      signinWithPopup();
+    }
+  }
+
+  private get isSmartphone() {
+    return window.innerWidth < this.BoundaryWidth;
+  }
 }
 </script>
 

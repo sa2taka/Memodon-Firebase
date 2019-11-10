@@ -34,6 +34,8 @@
       transition="slide-y-transition"
       offset-y
       :content-class="isDark ? 'menu-grey' : 'white'"
+      :value="menu"
+      @input="input($event)"
     >
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on" @click="drawer = !drawer">
@@ -49,11 +51,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Watch, Vue } from 'vue-property-decorator';
+import { Component, Watch, Emit, Prop, Vue } from 'vue-property-decorator';
 import theme from '@/store/modules/theme';
 import { MinSmallWidth } from '@/libs/globalConstVariables';
 @Component
 export default class NavBarMenu extends Vue {
+  @Prop({ required: true })
+  public menu: boolean | undefined;
+
   private isDark: boolean = false;
   private isSmartphoneWidth: boolean = false;
   private BoundaryWidth = MinSmallWidth;
@@ -90,6 +95,8 @@ export default class NavBarMenu extends Vue {
       this.detectDevice();
     });
   }
+  @Emit()
+  public input(value: boolean) {}
 }
 </script>
 

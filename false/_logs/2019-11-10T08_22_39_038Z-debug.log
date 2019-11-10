@@ -1,0 +1,40 @@
+0 info it worked if it ends with ok
+1 verbose cli [
+1 verbose cli   '/Users/t0p_l1ght/.nvm/versions/node/v12.10.0/bin/node',
+1 verbose cli   '/Users/t0p_l1ght/.nvm/versions/node/v12.10.0/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'test:unit',
+1 verbose cli   '--no-cache'
+1 verbose cli ]
+2 info using npm@6.10.3
+3 info using node@v12.10.0
+4 verbose run-script [ 'pretest:unit', 'test:unit', 'posttest:unit' ]
+5 info lifecycle memodon@0.1.0~pretest:unit: memodon@0.1.0
+6 info lifecycle memodon@0.1.0~test:unit: memodon@0.1.0
+7 verbose lifecycle memodon@0.1.0~test:unit: unsafe-perm in lifecycle true
+8 verbose lifecycle memodon@0.1.0~test:unit: PATH: /Users/t0p_l1ght/.nvm/versions/node/v12.10.0/lib/node_modules/npm/node_modules/npm-lifecycle/node-gyp-bin:/Users/t0p_l1ght/projects/Memodon-Firebase/node_modules/.bin:/Users/t0p_l1ght/.nvm/versions/node/v12.10.0/bin:/usr/local/sbin:/usr/local/opt/binutils/bin:/usr/local/opt/gettext/bin:/Users/t0p_l1ght/.rbenv/shims:/Users/t0p_l1ght/.rbenv/bin:/Users/t0p_l1ght/.rbenv/shims:/usr/local/opt/imagemagick@6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Library/Apple/bin:/opt/X11/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Wireshark.app/Contents/MacOS:/Users/t0p_l1ght/Documents/cocos2d-x-3.16/templates:/Users/t0p_l1ght/Downloads:/Users/sat1/Documents/cocos2d-x-3.16/tools/cocos2d-console/bin:/Users/t0p_l1ght/.nvm/versions/node/v12.10.0/bin:/usr/local/sbin:/usr/local/opt/binutils/bin:/usr/local/opt/gettext/bin:/Users/t0p_l1ght/.rbenv/shims:/Users/t0p_l1ght/.rbenv/bin:/usr/local/opt/imagemagick@6/bin
+9 verbose lifecycle memodon@0.1.0~test:unit: CWD: /Users/t0p_l1ght/projects/Memodon-Firebase
+10 silly lifecycle memodon@0.1.0~test:unit: Args: [ '-c', 'vue-cli-service test:unit --no-cache --coverage && codecov' ]
+11 silly lifecycle memodon@0.1.0~test:unit: Returned: code: 1  signal: null
+12 info lifecycle memodon@0.1.0~test:unit: Failed to exec test:unit script
+13 verbose stack Error: memodon@0.1.0 test:unit: `vue-cli-service test:unit --no-cache --coverage && codecov`
+13 verbose stack Exit status 1
+13 verbose stack     at EventEmitter.<anonymous> (/Users/t0p_l1ght/.nvm/versions/node/v12.10.0/lib/node_modules/npm/node_modules/npm-lifecycle/index.js:326:16)
+13 verbose stack     at EventEmitter.emit (events.js:209:13)
+13 verbose stack     at ChildProcess.<anonymous> (/Users/t0p_l1ght/.nvm/versions/node/v12.10.0/lib/node_modules/npm/node_modules/npm-lifecycle/lib/spawn.js:55:14)
+13 verbose stack     at ChildProcess.emit (events.js:209:13)
+13 verbose stack     at maybeClose (internal/child_process.js:1021:16)
+13 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:283:5)
+14 verbose pkgid memodon@0.1.0
+15 verbose cwd /Users/t0p_l1ght/projects/Memodon-Firebase
+16 verbose Darwin 19.0.0
+17 verbose argv "/Users/t0p_l1ght/.nvm/versions/node/v12.10.0/bin/node" "/Users/t0p_l1ght/.nvm/versions/node/v12.10.0/bin/npm" "run" "test:unit" "--no-cache"
+18 verbose node v12.10.0
+19 verbose npm  v6.10.3
+20 error code ELIFECYCLE
+21 error errno 1
+22 error memodon@0.1.0 test:unit: `vue-cli-service test:unit --no-cache --coverage && codecov`
+22 error Exit status 1
+23 error Failed at the memodon@0.1.0 test:unit script.
+23 error This is probably not a problem with npm. There is likely additional logging output above.
+24 verbose exit [ 1, true ]
