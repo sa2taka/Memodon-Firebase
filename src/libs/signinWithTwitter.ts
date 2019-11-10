@@ -35,7 +35,7 @@ const signinWithTwitter = (result: firebase.auth.UserCredential) => {
   }
   return dbRef
     .then(() => {
-      return User.signIn();
+      User.signIn();
     })
     .then(() => {
       router.push('/');
