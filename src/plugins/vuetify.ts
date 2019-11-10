@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuetify from 'vuetify/lib';
 import '@fortawesome/fontawesome-free/css/all.css';
+import 'flag-icon-css/css/flag-icon.min.css';
 import ja from 'vuetify/src/locale/ja';
 import values from './iconValues';
 

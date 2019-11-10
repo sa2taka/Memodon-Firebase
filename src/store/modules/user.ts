@@ -48,9 +48,21 @@ class User extends VuexModule implements UserState {
 
   @Action
   public signIn() {
-    const currentUser = firebase.auth().currentUser;
+    let currentUser = firebase.auth().currentUser;
     if (!currentUser) {
-      return this._signOut();
+      return firebase.auth().onAuthStateChanged((user) => {
+        if (!user) {
+          return this._signOut();
+        }
+
+        return this.getUserFromCloud(user.uid).then((user) => {
+          if (user.isSignin) {
+            this.setInfo(user);
+          } else {
+            this.signOut();
+          }
+        });
+      });
     }
     return this.getUserFromCloud(currentUser.uid).then((user) => {
       if (user.isSignin) {
