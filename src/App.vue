@@ -34,7 +34,10 @@ import { getRedirectResult } from '@/libs/signinWithTwitter';
 })
 export default class App extends Vue {
   public isDark: boolean = false;
+  private storageStateEntity: any = null;
+
   public async created() {
+    this.initializeStore();
     this.subscribeTheme();
     await getRedirectResult();
   }
@@ -55,6 +58,34 @@ export default class App extends Vue {
   private updateTheme(isDark: boolean) {
     this.$vuetify.theme.dark = isDark;
     Theme.setTheme(isDark ? 'dark' : 'light');
+  }
+
+  // initialize store
+
+  private initializeStore() {
+    if (!this.storageState) {
+      return;
+    }
+
+    this.setTheme();
+  }
+
+  private setTheme() {
+    Theme.setTheme(this.storageState.theme.theme);
+    this.isDark = this.storageState.theme.theme === 'dark';
+  }
+
+  private get storageState(): any {
+    if (this.storageStateEntity) {
+      return this.storageStateEntity;
+    }
+
+    try {
+      this.storageStateEntity = JSON.parse(localStorage.memodonState);
+    } catch (e) {
+      this.storageStateEntity = null;
+    }
+    return this.storageStateEntity;
   }
 }
 </script>

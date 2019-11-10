@@ -26,6 +26,7 @@ export const getRedirectResult = () => {
 };
 
 const signinWithTwitter = (result: firebase.auth.UserCredential) => {
+  console.log(result);
   if (!result.user) {
     return;
   }
@@ -51,6 +52,7 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
     user.user.providerData[0]
   ) {
     const data = {
+      // @ts-ignore `because user.user.providerData[0].uid` is not null, but Lint tell "Object is possibly 'null'".
       twitterId: user.user.providerData[0].uid,
       userName: user.additionalUserInfo.username,
       displayName: user.user.displayName,

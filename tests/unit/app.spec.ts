@@ -36,18 +36,19 @@ describe('App.vue', () => {
     expect(updateThemeMock).toBeCalled();
   });
 
-  it('should storageState is null when localStorage is empty', () => {
+  it('should storageSis null when localStorage is empty', () => {
     expect(wrapper.vm.storageState).toBe(null);
   });
 
-  it('should use storageStateEntity as storageState instead localStorage if storageStateEntity is not null', () => {
+  it('should use storageStateEntity as storageState instead of localStorage if storageStateEntity is not null', () => {
     wrapper.setData({
       storageStateEntity: {
         theme: {
-          theme: 'light',
+          theme: 'dark',
         },
       },
     });
-    expect(wrapper.vm.storageState.theme.theme).toBe('light');
+
+    expect(wrapper.vm.storageState.theme.theme).toBe('dark');
   });
 });
