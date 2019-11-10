@@ -57,7 +57,6 @@ export default class MainTitle extends Vue {
   display: flex;
   justify-content: center;
   position: relative;
-  top: 60px;
   user-select: none;
 }
 .index-title {
@@ -113,7 +112,7 @@ export default class MainTitle extends Vue {
 }
 @media (min-width: 601px) {
   $height: 280px;
-  $width: 60%;
+  $width: 90%;
   #main-title {
     height: $height + 20px;
   }
@@ -122,7 +121,7 @@ export default class MainTitle extends Vue {
     height: $height;
   }
   .index-title__content__label {
-    font-size: 62px;
+    font-size: 42px;
     font-weight: 600;
   }
   .index-title__content__text {
