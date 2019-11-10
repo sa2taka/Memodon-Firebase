@@ -12,6 +12,16 @@
         </v-list-item-action>
       </template>
     </v-list-item>
+
+    <v-list-item>
+      <v-list-item-content>
+        <v-list-item-title>Locale</v-list-item-title>
+      </v-list-item-content>
+
+      <v-list-item-action>
+        <locale-selection></locale-selection>
+      </v-list-item-action>
+    </v-list-item>
   </v-list>
 </template>
 
@@ -19,6 +29,8 @@
 import { Component, Emit, Vue } from 'vue-property-decorator';
 import NavBarMenu from '@/components/NavBar/NavBarMenu.vue';
 import DarkThemeSwitch from '@/components/Molecules/darkThemeSwitch.vue';
+import LocaleSelection from '@/components/Molecules/localeSelection.vue';
+
 import theme from '@/store/modules/theme';
 import { signinWithPopup, redirectSigninPage } from '@/libs/signinWithTwitter';
 import { MinSmallWidth } from '@/libs/globalConstVariables';
@@ -27,6 +39,7 @@ import { MinSmallWidth } from '@/libs/globalConstVariables';
   components: {
     NavBarMenu,
     DarkThemeSwitch,
+    LocaleSelection,
   },
 })
 export default class CommonSettings extends Vue {

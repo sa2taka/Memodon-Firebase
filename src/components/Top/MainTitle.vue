@@ -306,10 +306,10 @@ export default class MainTitle extends Vue {
 
 <i18n>
 {
-  "en": {
+  "us": {
     "subtitle": " becomes your note"
   },
-  "ja": {
+  "jp": {
     "subtitle": "がメモ帳に"
   }
 }
