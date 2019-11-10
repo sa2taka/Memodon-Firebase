@@ -26,7 +26,6 @@ export const getRedirectResult = () => {
 };
 
 const signinWithTwitter = (result: firebase.auth.UserCredential) => {
-  console.log(result);
   if (!result.user) {
     return;
   }
@@ -44,7 +43,6 @@ const signinWithTwitter = (result: firebase.auth.UserCredential) => {
 };
 
 const handleError = (reason: any) => {
-  console.log(reason);
   return reason;
 };
 
@@ -55,20 +53,30 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
     user.credential &&
     user.user.providerData[0]
   ) {
-    const data = {
+    const userData = {
       // @ts-ignore `because user.user.providerData[0].uid` is not null, but Lint tell "Object is possibly 'null'".
       twitterId: user.user.providerData[0].uid,
       userName: user.additionalUserInfo.username,
       displayName: user.user.displayName,
       iconUrl: user.user.photoURL,
+    };
+
+    const secretData = {
       token: (user.credential as firebase.auth.OAuthCredential).accessToken,
       secret: (user.credential as firebase.auth.OAuthCredential).secret,
     };
 
-    return firebase
-      .firestore()
-      .collection('users')
-      .doc(user.user.uid)
-      .set(data, { merge: true });
+    return Promise.all([
+      firebase
+        .firestore()
+        .collection('users')
+        .doc(user.user.uid)
+        .set(userData, { merge: true }),
+      firebase
+        .firestore()
+        .collection('secrets')
+        .doc(user.user.uid)
+        .set(secretData, { merge: true }),
+    ]);
   }
 };
