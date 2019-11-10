@@ -50,17 +50,47 @@ class User extends VuexModule implements UserState {
   public signIn() {
     const currentUser = firebase.auth().currentUser;
     if (!currentUser) {
-      return Promise.resolve(undefined);
+      return this._signOut();
     }
-    return this.getUserFromCloud(currentUser.uid);
+    return this.getUserFromCloud(currentUser.uid).then((user) => {
+      if (user.isSignin) {
+        this.setInfo(user);
+      } else {
+        this.signOut();
+      }
+    });
   }
 
   @Action
   private getUserFromCloud(uid: string) {
-    return Promise.resolve();
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(uid)
+      .get()
+      .then((doc) => {
+        const data = doc.data();
+        if (doc.exists && typeof data !== 'undefined') {
+          return {
+            twitterId: data.twitterId,
+            userName: data.userName,
+            displayName: data.displayName,
+            iconUrl: data.iconUrl,
+            isSignin: true,
+          };
+        } else {
+          return {
+            twitterId: '',
+            userName: '',
+            displayName: '',
+            iconUrl: '',
+            isSignin: false,
+          };
+        }
+      });
   }
 
-  @Action({ commit: 'signOut' })
+  @Action({ commit: '_signOut' })
   public signOut() {
     return firebase.auth().signOut();
   }
