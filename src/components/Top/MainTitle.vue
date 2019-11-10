@@ -122,7 +122,7 @@ export default class MainTitle extends Vue {
     height: $height;
   }
   .index-title__content__label {
-    font-size: 42px;
+    font-size: 62px;
     font-weight: 600;
   }
   .index-title__content__text {
@@ -171,7 +171,7 @@ export default class MainTitle extends Vue {
     height: 180px;
   }
   .index-title__content__label {
-    font-size: 32px;
+    font-size: 42px;
     font-weight: 600;
   }
   .index-title__content__text {
@@ -215,7 +215,7 @@ export default class MainTitle extends Vue {
   width: 100%;
   height: 100%;
   right: 0%;
-  animation: fadeFromLeft 0.4s linear 2s forwards;
+  animation: fadeFromLeft 0.4s linear 0.5s forwards;
   animation-fill-mode: both;
 }
 .index-title__content__icon {
@@ -224,7 +224,7 @@ export default class MainTitle extends Vue {
   left: 20%;
   opacity: 0;
   transform: translateX(-50%);
-  animation: penAnimation 1.6s linear 1.92s forwards;
+  animation: penAnimation 1.6s linear 0.42s forwards;
   animation-fill-mode: both;
 }
 .index-title__content__text:before {
@@ -233,7 +233,7 @@ export default class MainTitle extends Vue {
   width: 100%;
   height: 100%;
   right: 0%;
-  animation: fadeFromLeft 0.4s linear 2.8s forwards;
+  animation: fadeFromLeft 0.4s linear 1.3s forwards;
   animation-fill-mode: both;
 }
 .background--light:before {
