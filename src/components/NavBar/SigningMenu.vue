@@ -37,18 +37,6 @@
         </v-list-item-title>
       </v-list-item-content>
     </v-list-item>
-    <v-divider></v-divider>
-    <v-list-item>
-      <template v-slot:default="{ active, toggle }">
-        <v-list-item-content>
-          <v-list-item-title>Dark Mode</v-list-item-title>
-        </v-list-item-content>
-
-        <v-list-item-action>
-          <dark-theme-switch></dark-theme-switch>
-        </v-list-item-action>
-      </template>
-    </v-list-item>
   </nav-bar-menu>
 </template>
 

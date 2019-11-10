@@ -21,7 +21,7 @@
             `background--${theme}`,
           ]"
         >
-          マストドンがメモ帳に
+          Twitter{{ $t('subtitle') }}
         </div>
         <div class="index-title__content__base index-title__content__icon">
           <v-icon class="index-title__content__icon__content">fa-pen</v-icon>
@@ -303,3 +303,14 @@ export default class MainTitle extends Vue {
   }
 }
 </style>
+
+<i18n>
+{
+  "en": {
+    "subtitle": " becomes your note"
+  },
+  "ja": {
+    "subtitle": "がメモ帳に"
+  }
+}
+</i18n>

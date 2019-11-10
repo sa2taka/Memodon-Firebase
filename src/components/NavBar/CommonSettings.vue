@@ -1,16 +1,18 @@
 <template>
-  <nav-bar-menu :menu="menu" @input="menu = $event">
+  <v-list subheader two-line flat>
+    <v-subheader>Common Settings</v-subheader>
     <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title>
-          <v-btn text @click="singinWithTwitter">
-            <v-icon color="#1DA1F2" v-html="'$vuetify.icons.twitter'"></v-icon>
-            <p class="ml-1 my-auto">Sign in with Twitter</p>
-          </v-btn>
-        </v-list-item-title>
-      </v-list-item-content>
+      <template v-slot:default="{ active, toggle }">
+        <v-list-item-content>
+          <v-list-item-title>Dark Mode</v-list-item-title>
+        </v-list-item-content>
+
+        <v-list-item-action>
+          <dark-theme-switch></dark-theme-switch>
+        </v-list-item-action>
+      </template>
     </v-list-item>
-  </nav-bar-menu>
+  </v-list>
 </template>
 
 <script lang="ts">
@@ -27,7 +29,7 @@ import { MinSmallWidth } from '@/libs/globalConstVariables';
     DarkThemeSwitch,
   },
 })
-export default class UnauthMenu extends Vue {
+export default class CommonSettings extends Vue {
   private BoundaryWidth = MinSmallWidth;
   private menu = false;
 

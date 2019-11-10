@@ -25,6 +25,10 @@
       <v-list dense nav>
         <slot></slot>
       </v-list>
+      <v-divider></v-divider>
+      <common-settings
+        :class="[isDark ? 'menu-grey' : 'white']"
+      ></common-settings>
     </v-navigation-drawer>
     <v-menu
       v-if="!isSmartphoneWidth"
@@ -46,6 +50,10 @@
       <v-list dense nav :color="isDark ? 'menu-grey' : 'white'">
         <slot></slot>
       </v-list>
+      <v-divider></v-divider>
+      <common-settings
+        :class="[isDark ? 'menu-grey' : 'white']"
+      ></common-settings>
     </v-menu>
   </div>
 </template>
@@ -54,7 +62,13 @@
 import { Component, Watch, Emit, Prop, Vue } from 'vue-property-decorator';
 import theme from '@/store/modules/theme';
 import { MinSmallWidth } from '@/libs/globalConstVariables';
-@Component
+import CommonSettings from '@/components/NavBar/CommonSettings.vue';
+
+@Component({
+  components: {
+    CommonSettings,
+  },
+})
 export default class NavBarMenu extends Vue {
   @Prop({ required: true })
   public menu: boolean | undefined;
