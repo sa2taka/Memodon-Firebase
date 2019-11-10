@@ -22,6 +22,7 @@
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import Theme from '@/store/modules/theme';
+import User, { UserState } from '@/store/modules/user';
 import UnauthMenu from '@/components/NavBar/UnauthMenu.vue';
 import SigningMenu from '@/components/NavBar/SigningMenu.vue';
 import { getRedirectResult } from '@/libs/signinWithTwitter';
@@ -34,11 +35,13 @@ import { getRedirectResult } from '@/libs/signinWithTwitter';
 })
 export default class App extends Vue {
   public isDark: boolean = false;
+  private user: UserState = User;
   private storageStateEntity: any = null;
 
   public async created() {
-    this.initializeStore();
+    await this.initializeStore();
     this.subscribeTheme();
+    this.subscribeUser();
     await getRedirectResult();
   }
   @Watch('isDark')
@@ -46,7 +49,7 @@ export default class App extends Vue {
     this.updateTheme(isDark);
   }
   public get isSignin() {
-    return false;
+    return this.user.isSignin;
   }
   private subscribeTheme() {
     this.$store.subscribe((mutation, state) => {
@@ -62,17 +65,23 @@ export default class App extends Vue {
 
   // initialize store
 
-  private initializeStore() {
+  private async initializeStore() {
     if (!this.storageState) {
       return;
     }
 
     this.setTheme();
+    await this.setUser();
   }
 
   private setTheme() {
     Theme.setTheme(this.storageState.theme.theme);
     this.isDark = this.storageState.theme.theme === 'dark';
+  }
+
+  private async setUser() {
+    User.setInfo(this.storageState.user);
+    await User.signIn();
   }
 
   private get storageState(): any {
@@ -86,6 +95,14 @@ export default class App extends Vue {
       this.storageStateEntity = null;
     }
     return this.storageStateEntity;
+  }
+
+  private subscribeUser() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type.startsWith('user/')) {
+        this.user = User;
+      }
+    });
   }
 }
 </script>

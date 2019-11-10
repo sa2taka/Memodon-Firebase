@@ -1,5 +1,5 @@
 <template>
-  <nav-bar-menu>
+  <nav-bar-menu :menu="false">
     <v-list-item
       @click="
         '';
@@ -8,12 +8,12 @@
       "
     >
       <v-list-item-avatar>
-        <v-img :src="''"></v-img>
+        <v-img :src="user.iconUrl"></v-img>
       </v-list-item-avatar>
 
       <v-list-item-content>
-        <v-list-item-title>とっぷら</v-list-item-title>
-        <v-list-item-subtitle>t0p-l1ght</v-list-item-subtitle>
+        <v-list-item-title v-html="user.displayName"></v-list-item-title>
+        <v-list-item-subtitle>@{{ user.userName }}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
 
@@ -57,6 +57,8 @@ import { Component, Watch, Vue } from 'vue-property-decorator';
 import NavBarMenu from '@/components/NavBar/NavBarMenu.vue';
 import DarkThemeSwitch from '@/components/Molecules/darkThemeSwitch.vue';
 import theme from '@/store/modules/theme';
+import User, { UserState } from '@/store/modules/user';
+
 @Component({
   components: {
     NavBarMenu,
@@ -64,11 +66,30 @@ import theme from '@/store/modules/theme';
   },
 })
 export default class SigningMenu extends Vue {
-  public created() {}
+  private user: UserState = User;
+  public created() {
+    this.subscribeUser();
+  }
 
-  private signout() {}
+  private signout() {
+    User.signOut()
+      .then(() => {
+        this.$router.push('/');
+      })
+      .catch(() => {
+        this.$router.push('/');
+      });
+  }
 
   private async fetchMemo() {}
+
+  private subscribeUser() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type.startsWith('user/')) {
+        this.user = User;
+      }
+    });
+  }
 }
 </script>
 

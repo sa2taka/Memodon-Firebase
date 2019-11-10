@@ -34,9 +34,13 @@ const signinWithTwitter = (result: firebase.auth.UserCredential) => {
   if (typeof dbRef === 'undefined') {
     throw 'update error';
   }
-  return dbRef.then(User.signIn).then(() => {
-    router.push('/');
-  });
+  return dbRef
+    .then(() => {
+      return User.signIn();
+    })
+    .then(() => {
+      router.push('/');
+    });
 };
 
 const handleError = (reason: any) => {
