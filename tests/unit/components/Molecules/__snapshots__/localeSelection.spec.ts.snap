@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component is a Vue instance 1`] = `
+<v-menu-stub
+  closedelay="0"
+  closeonclick="true"
+  closeoncontentclick="true"
+  contentclass=""
+  maxheight="auto"
+  maxwidth="auto"
+  nudgebottom="0"
+  nudgeleft="0"
+  nudgeright="0"
+  nudgetop="0"
+  nudgewidth="0"
+  opendelay="0"
+  openonclick="true"
+  origin="top left"
+  transition="v-menu-transition"
+>
+   
+  <v-list-stub
+    tag="div"
+    tile="true"
+  >
+    <v-list-item-stub
+      activeclass=""
+      tag="div"
+    >
+      <i
+        class="flag-icon flag-icon-jp"
+      />
+    </v-list-item-stub>
+    <v-list-item-stub
+      activeclass=""
+      tag="div"
+    >
+      <i
+        class="flag-icon flag-icon-us"
+      />
+    </v-list-item-stub>
+  </v-list-stub>
+</v-menu-stub>
+`;
