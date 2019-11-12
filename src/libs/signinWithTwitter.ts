@@ -1,7 +1,6 @@
 import firebase from '@/firebase';
 import router from '@/router/index';
 import User from '@/store/modules/user';
-import { userInfo } from 'os';
 
 const provider = new firebase.auth.TwitterAuthProvider();
 
