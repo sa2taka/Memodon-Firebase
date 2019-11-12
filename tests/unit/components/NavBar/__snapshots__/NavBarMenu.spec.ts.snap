@@ -33,6 +33,12 @@ exports[`Component is a Vue instance 1`] = `
       tag="div"
       tile="true"
     />
+     
+    <v-divider-stub />
+     
+    <common-settings-stub
+      class="white"
+    />
   </v-menu-stub>
 </div>
 `;
@@ -69,6 +75,12 @@ exports[`Component is dark mode 1`] = `
       nav="true"
       tag="div"
       tile="true"
+    />
+     
+    <v-divider-stub />
+     
+    <common-settings-stub
+      class="menu-grey"
     />
   </v-menu-stub>
 </div>
@@ -114,6 +126,12 @@ exports[`Component is smartphone mode 1`] = `
       nav="true"
       tag="div"
       tile="true"
+    />
+     
+    <v-divider-stub />
+     
+    <common-settings-stub
+      class="white"
     />
   </v-navigation-drawer-stub>
    
