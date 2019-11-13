@@ -13,7 +13,7 @@ import { MinSmallWidth } from '@/libs/globalConstVariables';
 @Component
 export default class SigninTwitterButton extends Vue {
   @Prop()
-  public text = false;
+  public text: boolean | undefined;
   private singinWithTwitter() {
     if (this.isSmartphone) {
       redirectSigninPage();

@@ -52,15 +52,18 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
     user.credential &&
     user.user.providerData[0]
   ) {
+    console.log(user.user);
     const userData = {
       // @ts-ignore `because user.user.providerData[0].uid` is not null, but Lint tell "Object is possibly 'null'".
       twitterId: user.user.providerData[0].uid,
       userName: user.additionalUserInfo.username,
       displayName: user.user.displayName,
       iconUrl: user.user.photoURL,
+      isPrivate: true,
     };
 
-    const secretData = {
+    let secretData: Record<string, any> = {};
+    secretData[userData.twitterId] = {
       token: (user.credential as firebase.auth.OAuthCredential).accessToken,
       secret: (user.credential as firebase.auth.OAuthCredential).secret,
     };
@@ -73,8 +76,8 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
         .set(userData, { merge: true }),
       firebase
         .firestore()
-        .collection('secrets')
-        .doc(userData.twitterId)
+        .collection('secrets/twitter')
+        .doc(user.user.uid)
         .set(secretData, { merge: true }),
     ]);
   }
