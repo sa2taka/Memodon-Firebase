@@ -8,7 +8,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "test": "mocha --reporter spec  -r ts-node/register tests/**/*.spec.ts"
+    "test": "mocha --reporter spec  -r ts-node/register 'tests/**/*.spec.ts'"
   },
   "engines": {
     "node": "8"
@@ -28,6 +28,7 @@
     "chai": "^4.2.0",
     "firebase-functions-test": "^0.1.7",
     "mocha": "^6.2.2",
+    "rewire": "^4.0.1",
     "ts-node": "^8.5.0",
     "tslint": "^5.12.0",
     "typescript": "^3.2.2"
