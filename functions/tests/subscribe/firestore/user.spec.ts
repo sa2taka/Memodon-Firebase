@@ -7,8 +7,8 @@ import { id } from '../../../src/secrets/twitter';
 
 describe('Utils', () => {
   it('should get private', () => {
-    return User.isPrivate(id).then((isPrivate: boolean) => {
-      assert.isFalse(isPrivate);
+    return User.isPublic(id).then((ans: boolean) => {
+      assert.isTrue(ans);
     });
   });
 });
