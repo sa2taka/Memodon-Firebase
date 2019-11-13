@@ -10,26 +10,30 @@ const twitterAPIUserTimelineEndpoint =
 export default function fetchTwitterMemo(
   twitterId: string,
   token: string,
-  secret: string
+  secret: string,
+  sinceId?: string
 ) {
-  return crawlAndFilterTimeline(twitterId, token, secret).then((timeline) => {
-    return timeline.map((value) => {
-      return {
-        id: value.id,
-        timestamp: firestore.Timestamp.fromMillis(
-          moment(value.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY').format('x')
-        ),
-        text: value.text,
-        entities: value.entities,
-      };
-    });
-  });
+  return crawlAndFilterTimeline(twitterId, token, secret, sinceId).then(
+    (timeline) => {
+      return timeline.map((value) => {
+        return {
+          id: value.id,
+          timestamp: firestore.Timestamp.fromMillis(
+            moment(value.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY').format('x')
+          ),
+          text: value.text,
+          entities: value.entities,
+        };
+      });
+    }
+  );
 }
 
 async function crawlAndFilterTimeline(
   twitterid: string,
   token: string,
-  secret: string
+  secret: string,
+  sinceId?: string
 ) {
   let maxId = null;
   let memos: any[] = [];
@@ -38,7 +42,8 @@ async function crawlAndFilterTimeline(
       twitterid,
       token,
       secret,
-      maxId
+      maxId,
+      sinceId
     );
     maxId = timeline[timeline.length - 1]
       ? timeline[timeline.length - 1].id
@@ -65,7 +70,8 @@ function fetchTwitterUserTimeline(
   twitterId: string,
   token: string,
   secret: string,
-  maxId: string | null
+  maxId: string | null,
+  sinceId: string | undefined
 ) {
   const count = 200;
   const data: any = {
@@ -75,6 +81,10 @@ function fetchTwitterUserTimeline(
 
   if (maxId) {
     data['max_id'] = maxId;
+  }
+
+  if (typeof sinceId !== 'undefined') {
+    data['since_id'] = sinceId;
   }
 
   return get(twitterAPIUserTimelineEndpoint, token, secret, data);
