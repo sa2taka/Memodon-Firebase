@@ -1,7 +1,7 @@
 require('firebase-functions-test')();
 
 import * as Util from '../src/util';
-const assert = require('assert');
+const assert = require('chai').assert;
 
 describe('Utils', () => {
   it('should decode jwt', () => {

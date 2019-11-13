@@ -74,7 +74,7 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
       firebase
         .firestore()
         .collection('secrets')
-        .doc(user.user.uid)
+        .doc(userData.twitterId)
         .set(secretData, { merge: true }),
     ]);
   }
