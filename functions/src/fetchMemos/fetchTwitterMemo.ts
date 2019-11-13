@@ -1,10 +1,32 @@
 import { consumerKey, consumerSecret } from '../secrets/twitter';
+import { firestore } from 'firebase-admin';
+
 const rp = require('request-promise');
+const moment = require('moment');
 
 const twitterAPIUserTimelineEndpoint =
   'https://api.twitter.com/1.1/statuses/user_timeline.json';
 
-export default async function fetchTwittermemo(
+export default function fetchTwitterMemo(
+  twitterId: string,
+  token: string,
+  secret: string
+) {
+  return crawlAndFilterTimeline(twitterId, token, secret).then((timeline) => {
+    return timeline.map((value) => {
+      return {
+        id: value.id,
+        timestamp: firestore.Timestamp.fromMillis(
+          moment(value.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY').format('x')
+        ),
+        text: value.text,
+        entities: value.entities,
+      };
+    });
+  });
+}
+
+async function crawlAndFilterTimeline(
   twitterid: string,
   token: string,
   secret: string
