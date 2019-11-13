@@ -52,14 +52,12 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
     user.credential &&
     user.user.providerData[0]
   ) {
-    console.log(user.user);
     const userData = {
       // @ts-ignore `because user.user.providerData[0].uid` is not null, but Lint tell "Object is possibly 'null'".
       twitterId: user.user.providerData[0].uid,
       userName: user.additionalUserInfo.username,
       displayName: user.user.displayName,
       iconUrl: user.user.photoURL,
-      isPrivate: true,
     };
 
     let secretData: Record<string, any> = {};

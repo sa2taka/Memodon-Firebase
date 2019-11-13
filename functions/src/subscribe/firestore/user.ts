@@ -16,17 +16,17 @@ export const onCreate = functions.firestore
       return;
     }
 
-    return isPrivate(user.twitterid).then((ans) => {
-      return snap.ref.set({ isPrivate: ans }, { merge: true });
+    return isPublic(user.twitterid).then((ans) => {
+      return snap.ref.set({ isPublic: ans }, { merge: true });
     });
   });
 
-export function isPrivate(twitterId: string): Promise<boolean> {
+export function isPublic(twitterId: string): Promise<boolean> {
   return get(userInfoEndPoint, {
     user_id: twitterId,
   })
     .then((data: any) => {
-      return data.protected;
+      return !data.protected;
     })
     .catch(() => {
       return true;
