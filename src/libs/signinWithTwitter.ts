@@ -29,11 +29,7 @@ const signinWithTwitter = (result: firebase.auth.UserCredential) => {
     return;
   }
 
-  const dbRef = createUserIntoCloud(result);
-  if (typeof dbRef === 'undefined') {
-    throw 'update error';
-  }
-  return dbRef
+  return createUserIntoCloud(result)
     .then(() => {
       User.signIn();
     })
@@ -47,18 +43,19 @@ const handleError = (reason: any) => {
 };
 
 const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
+  const userInfo = user.user;
   if (
-    user.user &&
+    userInfo &&
     user.additionalUserInfo &&
     user.credential &&
-    user.user.providerData[0]
+    userInfo.providerData[0]
   ) {
     const userData: any = {
       // @ts-ignore `because user.user.providerData[0].uid` is not null, but Lint tell "Object is possibly 'null'".
-      twitterId: user.user.providerData[0].uid,
+      twitterId: userInfo.providerData[0].uid,
       userName: user.additionalUserInfo.username,
-      displayName: user.user.displayName,
-      iconUrl: user.user.photoURL,
+      displayName: userInfo.displayName,
+      iconUrl: userInfo.photoURL,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
 
@@ -72,17 +69,24 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
       secret: (user.credential as firebase.auth.OAuthCredential).secret,
     };
 
-    return Promise.all([
-      firebase
-        .firestore()
-        .collection('users')
-        .doc(user.user.uid)
-        .set(userData),
-      firebase
-        .firestore()
-        .collection('secrets/twitter')
-        .doc(user.user.uid)
-        .set(secretData),
-    ]);
+    console.log(secretData);
+
+    return firebase
+      .firestore()
+      .collection('users')
+      .doc(userInfo.uid)
+      .set(userData)
+      .then(() => {
+        console.log(secretData);
+        return firebase
+          .firestore()
+          .collection('users')
+          .doc(userInfo.uid)
+          .collection('secrets')
+          .doc('twitter.com')
+          .set(secretData);
+      });
+  } else {
+    return Promise.resolve();
   }
 };
