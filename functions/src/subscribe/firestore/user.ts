@@ -3,6 +3,8 @@ import { firestore } from 'firebase-admin';
 
 import fetchTwitterMemo from '../../fetchMemos/fetchTwitterMemo';
 import updateUserFetchedTime from '../../fetchMemos/updateUserFetchedTime';
+import addTag from '../../fetchMemos/addTag';
+
 import { consumerKey, consumerSecret } from '../../secrets/twitter';
 const crypto = require('crypto');
 
@@ -85,6 +87,7 @@ function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
       return Promise.all([
         addNoteIntoUserSubCollection(noteForUser, snap.id),
         addNoteIntoMemoCollection(noteForMemo),
+        addTag(noteForUser),
       ]);
     });
 }
@@ -103,13 +106,6 @@ function addNoteIntoUserSubCollection(newNote: Array<any>, userId: string) {
           .update(uidStr, 'utf8')
           .digest('hex');
 
-        console.log({
-          error_occured: {
-            uidStr,
-            uid,
-            userId,
-          },
-        });
         const ref = firestore()
           .collection('users')
           .doc(userId)
