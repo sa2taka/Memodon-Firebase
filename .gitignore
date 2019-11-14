@@ -21,3 +21,6 @@ yarn-error.log*
 *.sw?
 
 /coverage
+/false
+
+functions/**/secrets/
