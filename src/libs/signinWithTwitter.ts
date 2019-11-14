@@ -28,6 +28,7 @@ const signinWithTwitter = (result: firebase.auth.UserCredential) => {
   if (!result.user) {
     return;
   }
+
   const dbRef = createUserIntoCloud(result);
   if (typeof dbRef === 'undefined') {
     throw 'update error';
@@ -52,13 +53,18 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
     user.credential &&
     user.user.providerData[0]
   ) {
-    const userData = {
+    const userData: any = {
       // @ts-ignore `because user.user.providerData[0].uid` is not null, but Lint tell "Object is possibly 'null'".
       twitterId: user.user.providerData[0].uid,
       userName: user.additionalUserInfo.username,
       displayName: user.user.displayName,
       iconUrl: user.user.photoURL,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
     };
+
+    if (user.additionalUserInfo.isNewUser) {
+      userData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+    }
 
     let secretData: Record<string, any> = {};
     secretData[userData.twitterId] = {
@@ -71,12 +77,12 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
         .firestore()
         .collection('users')
         .doc(user.user.uid)
-        .set(userData, { merge: true }),
+        .set(userData),
       firebase
         .firestore()
         .collection('secrets/twitter')
         .doc(user.user.uid)
-        .set(secretData, { merge: true }),
+        .set(secretData),
     ]);
   }
 };
