@@ -11,7 +11,7 @@
     "test": "mocha --reporter spec  -r ts-node/register 'tests/**/*.spec.ts'"
   },
   "engines": {
-    "node": "8"
+    "node": "10"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -19,7 +19,8 @@
     "firebase-functions": "^3.3.0",
     "moment": "^2.24.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",

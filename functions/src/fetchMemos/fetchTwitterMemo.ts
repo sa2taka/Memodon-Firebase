@@ -15,7 +15,7 @@ export default function fetchTwitterMemo(
 ) {
   return crawlAndFilterTimeline(twitterId, token, secret, sinceId).then(
     (timeline) => {
-      return timeline.map((value) => {
+      const newNoteForUser = timeline.map((value) => {
         return {
           id: value.id,
           timestamp: firestore.Timestamp.fromMillis(
@@ -23,8 +23,14 @@ export default function fetchTwitterMemo(
           ),
           text: value.text,
           entities: value.entities,
+          provider: 'twitter.com',
+          providerId: twitterId,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+          updatedAt: firestore.FieldValue.serverTimestamp(),
         };
       });
+
+      return newNoteForUser;
     }
   );
 }

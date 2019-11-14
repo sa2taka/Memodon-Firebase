@@ -69,22 +69,19 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
       secret: (user.credential as firebase.auth.OAuthCredential).secret,
     };
 
-    console.log(secretData);
-
     return firebase
       .firestore()
       .collection('users')
       .doc(userInfo.uid)
-      .set(userData)
+      .set(userData, { merge: true })
       .then(() => {
-        console.log(secretData);
         return firebase
           .firestore()
           .collection('users')
           .doc(userInfo.uid)
           .collection('secrets')
           .doc('twitter.com')
-          .set(secretData);
+          .set(secretData, { merge: true });
       });
   } else {
     return Promise.resolve();
