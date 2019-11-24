@@ -2,7 +2,7 @@ import { EventContext } from 'firebase-functions';
 import { firestore } from 'firebase-admin';
 
 import fetchTwitterMemo from '../../fetchMemos/fetchTwitterMemo';
-import updateUserFetchedTime from '../../fetchMemos/updateUserFetchedTime';
+import updateUserFetchedTime from '../../firestore/updateUserFetchedTime';
 import addTag from '../../firestore/addTag';
 import addMemo from '../../firestore/addMemo';
 
@@ -75,6 +75,7 @@ function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
       return Promise.all([
         addMemo(note, snap.id),
         addTag(noteForUser, snap.id),
+        updateUserFetchedTime(snap.id),
       ]);
     });
 }
