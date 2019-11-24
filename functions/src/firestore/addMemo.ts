@@ -18,44 +18,40 @@ export default function addMemo(note: Array<any>, userId: string) {
 function addNoteIntoUserSubCollection(newNote: Array<any>, userId: string) {
   const dividedNote = divideArrIntoPieces(newNote, 500);
 
-  return Promise.all(
-    dividedNote.map((note) => {
-      note.forEach((memo) => {
-        const uidStr = memo.provider + memo.id;
-        const uid = crypto
-          .createHash('sha256')
-          .update(uidStr, 'utf8')
-          .digest('hex');
+  dividedNote.forEach((note) => {
+    note.forEach((memo) => {
+      const uidStr = memo.provider + memo.id;
+      const uid = crypto
+        .createHash('sha256')
+        .update(uidStr, 'utf8')
+        .digest('hex');
 
-        const ref = firestore()
-          .collection('users')
-          .doc(userId)
-          .collection('memos')
-          .doc(uid);
-        setBatch(ref, memo);
-      });
-    })
-  );
+      const ref = firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('memos')
+        .doc(uid);
+      setBatch(ref, memo);
+    });
+  });
 }
 
 function addNoteIntoMemoCollection(newNote: Array<any>) {
   const dividedNote = divideArrIntoPieces(newNote, 500);
 
-  return Promise.all(
-    dividedNote.map((note) => {
-      note.forEach((memo) => {
-        const uidStr = memo.provider + memo.id;
-        const uid = crypto
-          .createHash('sha256')
-          .update(uidStr, 'utf8')
-          .digest('hex');
-        const ref = firestore()
-          .collection('memos')
-          .doc(uid);
-        setBatch(ref, memo);
-      });
-    })
-  );
+  dividedNote.forEach((note) => {
+    note.forEach((memo) => {
+      const uidStr = memo.provider + memo.id;
+      const uid = crypto
+        .createHash('sha256')
+        .update(uidStr, 'utf8')
+        .digest('hex');
+      const ref = firestore()
+        .collection('memos')
+        .doc(uid);
+      setBatch(ref, memo);
+    });
+  });
 }
 
 function divideArrIntoPieces(arr: Array<any>, n: number) {
