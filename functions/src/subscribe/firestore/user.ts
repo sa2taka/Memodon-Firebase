@@ -62,7 +62,7 @@ function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
     .collection('secrets')
     .doc('twitter.com')
     .get()
-    .then((value) => {
+    .then((value: firestore.DocumentData) => {
       const secretData = value.data();
 
       if (!secretData) {
@@ -72,7 +72,7 @@ function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
 
       return fetchTwitterMemo(userData.twitterId, token, secret);
     })
-    .then((noteForUser) => {
+    .then((noteForUser: Array<any> | undefined) => {
       if (!noteForUser) {
         return;
       }
@@ -87,7 +87,7 @@ function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
       return Promise.all([
         addNoteIntoUserSubCollection(noteForUser, snap.id),
         addNoteIntoMemoCollection(noteForMemo),
-        addTag(noteForUser),
+        addTag(noteForUser, snap.id),
       ]);
     });
 }

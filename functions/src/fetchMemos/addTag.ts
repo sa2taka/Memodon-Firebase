@@ -1,6 +1,57 @@
 import { firestore } from 'firebase-admin';
-export default function addTag(note: Array<any>) {
+const crypto = require('crypto');
+
+let batch = firestore().batch();
+let refCount = 0;
+let batches: Promise<any>[] = [];
+
+export default function addTag(note: Array<any>, userId: string) {
   const tags = extractTags(note);
+
+  addTagIntoRoot(tags);
+  addTagIntoUser(tags, userId);
+
+  batches.push(batch.commit());
+
+  return Promise.all(batches);
+}
+
+function addTagIntoUser(tags: Array<any>, userId: string) {
+  tags.forEach((tag) => {
+    const ref = firestore()
+      .collection('useres')
+      .doc(userId)
+      .collection('tags')
+      .doc(generateUUID(tag.text));
+    setBatch(ref, tag);
+  });
+}
+
+function addTagIntoRoot(tags: Array<any>) {
+  tags.forEach((tag) => {
+    const ref = firestore()
+      .collection('tags')
+      .doc(generateUUID(tag.text));
+    setBatch(ref, tag);
+  });
+}
+
+function generateUUID(tag: string) {
+  return crypto
+    .createHash('sha256')
+    .update(tag, 'utf8')
+    .digest('hex');
+}
+
+function setBatch(ref: firestore.DocumentReference, tag: any) {
+  batch.set(ref, tag);
+  refCount += 1;
+  if (refCount >= 500) {
+    batch.commit();
+    batches.push(batch);
+    refCount = 0;
+    batch = firestore().batch();
+  }
 }
 
 function extractTags(note: Array<any>): Array<string> {
