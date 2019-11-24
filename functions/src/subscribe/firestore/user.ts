@@ -3,10 +3,10 @@ import { firestore } from 'firebase-admin';
 
 import fetchTwitterMemo from '../../fetchMemos/fetchTwitterMemo';
 import updateUserFetchedTime from '../../fetchMemos/updateUserFetchedTime';
-import addTag from '../../fetchMemos/addTag';
+import addTag from '../../firestore/addTag';
+import addMemo from '../../firestore/addMemo';
 
 import { consumerKey, consumerSecret } from '../../secrets/twitter';
-const crypto = require('crypto');
 
 const rp = require('request-promise');
 const functions = require('firebase-functions');
@@ -38,18 +38,6 @@ export const onCreate = functions
     ]);
   });
 
-export function isPublic(twitterId: string): Promise<boolean> {
-  return get(userInfoEndPoint, {
-    user_id: twitterId,
-  })
-    .then((data: any) => {
-      return !data.protected;
-    })
-    .catch(() => {
-      return true;
-    });
-}
-
 function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
   const userData = snap.data();
   const userRef = snap.ref;
@@ -77,7 +65,7 @@ function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
         return;
       }
 
-      const noteForMemo = noteForUser.map((value: any) => {
+      const note = noteForUser.map((value: any) => {
         value.uid = snap.id;
         value.user = userRef;
 
@@ -85,71 +73,22 @@ function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
       });
 
       return Promise.all([
-        addNoteIntoUserSubCollection(noteForUser, snap.id),
-        addNoteIntoMemoCollection(noteForMemo),
+        addMemo(note, snap.id),
         addTag(noteForUser, snap.id),
       ]);
     });
 }
 
-function addNoteIntoUserSubCollection(newNote: Array<any>, userId: string) {
-  const dividedNote = divideArrIntoPieces(newNote, 500);
-
-  return Promise.all(
-    dividedNote.map((note) => {
-      const batch = firestore().batch();
-
-      note.forEach((memo) => {
-        const uidStr = memo.provider + memo.id;
-        const uid = crypto
-          .createHash('sha256')
-          .update(uidStr, 'utf8')
-          .digest('hex');
-
-        const ref = firestore()
-          .collection('users')
-          .doc(userId)
-          .collection('memos')
-          .doc(uid);
-        batch.set(ref, memo);
-      });
-
-      return batch.commit();
+export function isPublic(twitterId: string): Promise<boolean> {
+  return get(userInfoEndPoint, {
+    user_id: twitterId,
+  })
+    .then((data: any) => {
+      return !data.protected;
     })
-  );
-}
-
-function addNoteIntoMemoCollection(newNote: Array<any>) {
-  const dividedNote = divideArrIntoPieces(newNote, 500);
-
-  return Promise.all(
-    dividedNote.map((note) => {
-      const batch = firestore().batch();
-
-      note.forEach((memo) => {
-        const uidStr = memo.provider + memo.id;
-        const uid = crypto
-          .createHash('sha256')
-          .update(uidStr, 'utf8')
-          .digest('hex');
-        const ref = firestore()
-          .collection('memos')
-          .doc(uid);
-        batch.set(ref, memo);
-      });
-
-      return batch.commit();
-    })
-  );
-}
-
-function divideArrIntoPieces(arr: Array<any>, n: number) {
-  const arrList = [];
-  const idx = 0;
-  while (idx < arr.length) {
-    arrList.push(arr.splice(idx, idx + n));
-  }
-  return arrList;
+    .catch(() => {
+      return true;
+    });
 }
 
 function get(url: string, qs: any) {

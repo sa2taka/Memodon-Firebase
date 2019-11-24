@@ -12,8 +12,9 @@ export default function addTag(note: Array<any>, userId: string) {
   addTagIntoUser(tags, userId);
 
   batches.push(batch.commit());
-
-  return Promise.all(batches);
+  const _b = batches;
+  batches = [];
+  return Promise.all(_b);
 }
 
 function addTagIntoUser(tags: Array<any>, userId: string) {
@@ -47,8 +48,7 @@ function setBatch(ref: firestore.DocumentReference, tag: any) {
   batch.set(ref, tag);
   refCount += 1;
   if (refCount >= 500) {
-    batch.commit();
-    batches.push(batch);
+    batches.push(batch.commit());
     refCount = 0;
     batch = firestore().batch();
   }
