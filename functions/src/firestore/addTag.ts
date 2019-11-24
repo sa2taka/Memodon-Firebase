@@ -1,4 +1,5 @@
 import { firestore } from 'firebase-admin';
+const flatMap = require('array.prototype.flatmap');
 const crypto = require('crypto');
 
 let batch = firestore().batch();
@@ -56,8 +57,7 @@ function setBatch(ref: firestore.DocumentReference, tag: any) {
 
 function extractTags(note: Array<any>): Array<string> {
   return uniq(
-    // @ts-ignore Array has flatmap
-    note.flatMap((memo) => {
+    flatMap(note, (memo: any) => {
       return memo.entities.hashtags
         .map((tag: any) => {
           return tag.text;
