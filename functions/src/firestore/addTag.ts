@@ -2,48 +2,44 @@ import { firestore } from 'firebase-admin';
 const flatMap = require('array.prototype.flatmap');
 const crypto = require('crypto');
 
-let batch = firestore().batch();
-let refCount = 0;
-let batches: Promise<any>[] = [];
-
-export default function addTag(note: Array<any>, userId: string) {
+export default async function addTag(note: Array<any>, userId: string) {
   const tags = extractTags(note);
 
   const tagSnaps = tags.map((tag) => {
     return {
       text: tag,
-      createdAt: firestore.FieldValue.serverTimestamp(),
       updatedAt: firestore.FieldValue.serverTimestamp(),
     };
   });
 
-  addTagIntoRoot(tagSnaps);
-  addTagIntoUser(tagSnaps, userId);
-
-  batches.push(batch.commit());
-  const _b = batches;
-  batches = [];
-  return Promise.all(_b);
+  return Promise.all([
+    addTagIntoRoot(tagSnaps),
+    addTagIntoUser(tagSnaps, userId),
+  ]);
 }
 
 function addTagIntoUser(tags: Array<any>, userId: string) {
-  tags.forEach((tag) => {
-    const ref = firestore()
-      .collection('users')
-      .doc(userId)
-      .collection('tags')
-      .doc(generateUUID(tag.text));
-    setBatch(ref, tag);
-  });
+  return Promise.all(
+    tags.map((tag) => {
+      const ref = firestore()
+        .collection('users')
+        .doc(userId)
+        .collection('tags')
+        .doc(generateUUID(tag.text));
+      return writeTag(ref, tag);
+    })
+  );
 }
 
 function addTagIntoRoot(tags: Array<any>) {
-  tags.forEach((tag) => {
-    const ref = firestore()
-      .collection('tags')
-      .doc(generateUUID(tag.text));
-    setBatch(ref, tag);
-  });
+  return Promise.all(
+    tags.map((tag) => {
+      const ref = firestore()
+        .collection('tags')
+        .doc(generateUUID(tag.text));
+      return writeTag(ref, tag);
+    })
+  );
 }
 
 function generateUUID(tag: string) {
@@ -53,14 +49,14 @@ function generateUUID(tag: string) {
     .digest('hex');
 }
 
-function setBatch(ref: firestore.DocumentReference, tag: any) {
-  batch.set(ref, tag);
-  refCount += 1;
-  if (refCount >= 500) {
-    batches.push(batch.commit());
-    refCount = 0;
-    batch = firestore().batch();
-  }
+function writeTag(ref: firestore.DocumentReference, tag: any) {
+  return ref.get().then((snap: firestore.DocumentSnapshot) => {
+    const isTagExists = snap.exists;
+    if (!isTagExists) {
+      tag['createdAt'] = firestore.FieldValue.serverTimestamp();
+    }
+    return ref.set(tag);
+  });
 }
 
 function extractTags(note: Array<any>): Array<string> {
