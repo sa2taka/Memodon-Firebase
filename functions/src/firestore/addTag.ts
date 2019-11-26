@@ -9,8 +9,16 @@ let batches: Promise<any>[] = [];
 export default function addTag(note: Array<any>, userId: string) {
   const tags = extractTags(note);
 
-  addTagIntoRoot(tags);
-  addTagIntoUser(tags, userId);
+  const tagSnaps = tags.map((tag) => {
+    return {
+      text: tag,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+      updatedAt: firestore.FieldValue.serverTimestamp(),
+    };
+  });
+
+  addTagIntoRoot(tagSnaps);
+  addTagIntoUser(tagSnaps, userId);
 
   batches.push(batch.commit());
   const _b = batches;
@@ -21,7 +29,7 @@ export default function addTag(note: Array<any>, userId: string) {
 function addTagIntoUser(tags: Array<any>, userId: string) {
   tags.forEach((tag) => {
     const ref = firestore()
-      .collection('useres')
+      .collection('users')
       .doc(userId)
       .collection('tags')
       .doc(generateUUID(tag.text));
