@@ -1,4 +1,4 @@
-require('firebase-functions-test')();
+require('../config');
 
 import fetchTwittermemo from '../../src/fetchMemos/fetchTwitterMemo';
 import { id, token, secret } from '../../src/secrets/twitter';

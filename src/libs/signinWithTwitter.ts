@@ -34,7 +34,7 @@ const signinWithTwitter = (result: firebase.auth.UserCredential) => {
       User.signIn();
     })
     .then(() => {
-      router.push('/');
+      router.push('/note');
     });
 };
 
