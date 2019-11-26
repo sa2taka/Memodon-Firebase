@@ -1,13 +1,11 @@
 <template>
-  <v-col xs="12" md="6" lg="4">
-    <v-card min-width="320px" class="ml-8 mt-8">
-      <v-row>
-        <v-col>
-          <p>{{ text }}</p>
-        </v-col>
-      </v-row>
-    </v-card>
-  </v-col>
+  <v-card class="ml-8 mt-8">
+    <v-row>
+      <v-col>
+        <p>{{ text }}</p>
+      </v-col>
+    </v-row>
+  </v-card>
 </template>
 
 <script lang="ts">
