@@ -3,7 +3,7 @@ import VueRouter, { Route, RawLocation, NavigationGuard } from 'vue-router';
 import firebase from '../firebase';
 
 import Top from '../views/Top.vue';
-import Note from '../views/Note.vue';
+import Note from '../views/NotePage.vue';
 
 Vue.use(VueRouter);
 
