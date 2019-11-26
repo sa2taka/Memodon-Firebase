@@ -73,7 +73,7 @@ function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
       });
 
       return Promise.all([
-        addMemo(note, snap.id),
+        addMemo(note, snap.id).then,
         addTag(noteForUser, snap.id),
         updateUserFetchedTime(snap.id),
       ]);
