@@ -2,7 +2,7 @@
   <v-row>
     <user :userRef="memo.user"></user>
     <v-col>
-      <p class="ma-3">{{ memo.text }}</p>
+      <p class="mx-3">{{ memo.text }}</p>
     </v-col>
   </v-row>
 </template>

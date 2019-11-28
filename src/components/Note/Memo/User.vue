@@ -1,6 +1,6 @@
 <template>
-  <div class="memo-user">
-    <img class="icon ml-4 mr-2" :src="user.iconUrl" />
+  <div class="memo-user" v-if="user">
+    <img class="icon ml-4 mr-2" v-lazy="user.iconUrl" />
     <div class="name">
       <span class="display-name">{{ user.displayName }}</span>
       <span class="username">
@@ -15,14 +15,12 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { TwitterMemo as ITwitterMemo } from '@/types/memo';
 import firebase from '@/firebase';
 
-@Component({
-  components: {},
-})
+@Component({})
 export default class User extends Vue {
   @Prop({ required: true })
   public userRef!: firebase.firestore.DocumentReference;
 
-  private user: any = {};
+  private user: any = null;
 
   public created() {
     this.userRef.get().then((snap) => {
