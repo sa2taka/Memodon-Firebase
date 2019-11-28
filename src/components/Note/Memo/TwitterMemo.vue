@@ -1,8 +1,8 @@
 <template>
   <v-col>
     <user :userRef="memo.user"></user>
-
-    <p class="mx-3 memo-content" v-html="html(memo.text)"></p>
+    <v-divider class="mt-2"></v-divider>
+    <p class="mx-3 mt-2 memo-content" v-html="html(memo.text)"></p>
   </v-col>
 </template>
 
@@ -62,5 +62,6 @@ export default class TwitterMemo extends Vue {
 .memo-content {
   white-space: pre-wrap;
   word-wrap: break-word;
+  line-height: 1.3em;
 }
 </style>

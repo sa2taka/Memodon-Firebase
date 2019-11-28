@@ -1,7 +1,7 @@
 <template>
-  <div class="memo-user" v-if="user">
-    <img class="icon ml-4 mr-2" v-lazy="user.iconUrl" />
-    <div class="name">
+  <div class="memo-user">
+    <img class="icon ml-4 mr-2" v-lazy="user.iconUrl" v-if="user" />
+    <div class="name" v-if="user">
       <span class="display-name">{{ user.displayName }}</span>
       <span class="username">
         {{ user.provider || 'twitter.com' }}@{{ user.userName }}
@@ -33,6 +33,7 @@ export default class User extends Vue {
 <style lang="scss" scoped>
 .memo-user {
   display: flex;
+  height: 48px;
 }
 
 .icon {
