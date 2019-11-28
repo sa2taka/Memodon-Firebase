@@ -19,6 +19,26 @@ import { Memo as IMemo } from '@/types/memo';
 export default class Memo extends Vue {
   @Prop({ required: true })
   public memo!: IMemo;
+  public mounted() {
+    this.setGridRow();
+    this.registerMemoTagClickListener();
+  }
+
+  private registerMemoTagClickListener() {
+    this.$el.querySelectorAll('.memo-tag').forEach((elm) => {
+      elm.addEventListener('click', () => {
+        this.$router.push(`/note?query=${encodeURIComponent(elm.innerHTML)}`);
+      });
+    });
+  }
+
+  private setGridRow() {
+    const height = this.$el.scrollHeight;
+    this.$el.setAttribute(
+      'style',
+      `grid-row: span ${Math.ceil(height / 20) + 2};`
+    );
+  }
 }
 </script>
 

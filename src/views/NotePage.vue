@@ -1,11 +1,11 @@
 <template>
   <v-container justify="center" mt-9>
-    <note :note="note" v-if="note.length !== 0"></note>
+    <note :note="filterd" v-if="note.length !== 0"></note>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 import Note from '@/components/Note/Note.vue';
 import firebase from '@/firebase';
 import { Memo } from '@/types/memo';
@@ -14,6 +14,8 @@ import { Memo } from '@/types/memo';
 })
 export default class NotePage extends Vue {
   private note: Array<Memo> = [];
+  private filterd: Array<Memo> = [];
+  private end?: firebase.firestore.Timestamp;
 
   public created() {
     this.fetchNote();
@@ -34,18 +36,45 @@ export default class NotePage extends Vue {
     this.fetchUsersNote(currentUser);
   }
 
-  private fetchUsersNote(user: firebase.User, tag?: string) {
-    const ref = firebase
+  @Watch('$route')
+  private onChangeRoute() {
+    this.filterd = this.genFilterd();
+  }
+
+  private fetchUsersNote(user: firebase.User) {
+    let ref = firebase
       .firestore()
       .collection('users')
       .doc(user.uid)
-      .collection('memos');
+      .collection('memos')
+      .orderBy('timestamp', 'desc')
+      .limit(100);
+
+    if (this.end) {
+      ref = ref.endBefore(this.end);
+    }
 
     ref.get().then((snapshots) => {
+      if (snapshots.empty) {
+        return;
+      }
+      this.note = [];
       snapshots.forEach((snapshot) => {
+        this.end = snapshot.data().timestamp;
         this.note.push(snapshot.data() as Memo);
       });
+      this.filterd = this.genFilterd();
     });
+  }
+
+  private genFilterd(): Array<Memo> {
+    const query = this.$route.query.query;
+    if (typeof query === 'string' && query !== '') {
+      return this.note.filter((note) => {
+        return note.text.includes(query);
+      });
+    }
+    return this.note;
   }
 }
 </script>

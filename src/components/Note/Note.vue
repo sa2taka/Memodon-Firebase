@@ -23,38 +23,6 @@ export default class Note extends Vue {
   @Prop({ required: true })
   public note: Array<IMemo> | undefined;
   private grid: any;
-
-  public mounted() {
-    this.setGridRow();
-    // メモの中にあるタグがクリックされたときに、そのタグを検索する画面へ移るようなリスナーを登録
-    // メモの内容が可変であるため、どうしてもここに置かなきゃいけない
-    this.registerMemoTagClickListener();
-  }
-
-  private registerMemoTagClickListener() {
-    // 複数回登録されないようにdocumentに一回だけ登録する
-    // onClickでもいいけど
-    document.addEventListener('click', (event) => {
-      const elm = event.target as HTMLElement;
-      if (elm.className === 'memo-tag') {
-        this.$router.push(
-          `/note?tag=${encodeURIComponent(elm.innerHTML.replace('#', ''))}`
-        );
-      }
-    });
-  }
-
-  private setGridRow() {
-    const memos = document.querySelectorAll('.memo');
-
-    memos.forEach((memo) => {
-      const height = memo.scrollHeight;
-      memo.setAttribute(
-        'style',
-        `grid-row: span ${Math.ceil(height / 20) + 2};`
-      );
-    });
-  }
 }
 </script>
 
