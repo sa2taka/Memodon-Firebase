@@ -21,7 +21,7 @@ interface TwitterEntities {
   hashtags: TwitterHashTag[];
   media?: TwitterMedia;
   urls: TwitterURL[];
-  userMentions: TwitterUserMention[];
+  user_mentions: TwitterUserMention[];
   symbols: TwitterSymbol[];
 }
 
@@ -38,18 +38,18 @@ interface TwitterSymbol extends TwitterEntityBase {
 }
 
 interface TwitterURL extends TwitterEntityBase {
-  displayUrl: string;
-  expandedUrl: string;
+  display_url: string;
+  expanded_url: string;
   url: string;
 }
 
 interface TwitterMedia extends TwitterEntityBase {
-  displayUrl: string;
-  expandedUrl: string;
+  display_url: string;
+  expanded_url: string;
   id: number;
-  idStr: string;
-  mediaUrl: string;
-  mediaUrlHttps: string;
+  id_str: string;
+  media_url: string;
+  media_url_https: string;
   sizes: {
     thumb: TwitterMediaSize;
     large: TwitterMediaSize;
@@ -58,14 +58,14 @@ interface TwitterMedia extends TwitterEntityBase {
   };
   type: string;
   url: string;
-  videoInfo?: TwitterVideoInfo;
+  video_info?: TwitterVideoInfo;
 }
 
 interface TwitterUserMention extends TwitterEntityBase {
   name: string;
-  screenName: string;
+  screen_name: string;
   id: number;
-  idStr: string;
+  id_str: string;
 }
 
 interface TwitterEntityBase {
@@ -79,13 +79,13 @@ interface TwitterMediaSize {
 }
 
 interface TwitterVideoInfo {
-  aspectRatio: number[];
-  durationMillis: number;
+  aspect_ratio: number[];
+  duration_millis: number;
   variants: TwitterVariants[];
 }
 
 interface TwitterVariants {
   bitrate: number;
-  contentType: string;
+  content_type: string;
   url: string;
 }
