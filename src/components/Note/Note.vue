@@ -1,11 +1,12 @@
 <template>
-  <v-row id="note">
+  <div id="note">
     <memo
       :text="memo.text"
       v-for="memo in note"
       :key="memo.providerId + memo.id"
+      class="memo"
     ></memo>
-  </v-row>
+  </div>
 </template>
 
 <script lang="ts">
@@ -22,8 +23,25 @@ export default class Note extends Vue {
   public note: Array<any> | undefined;
   private grid: any;
 
-  public created() {}
+  public mounted() {
+    const memos = document.querySelectorAll('.memo');
+
+    memos.forEach((memo) => {
+      const height = memo.scrollHeight;
+      memo.setAttribute('style', `grid-row: span ${Math.ceil(height / 20)};`);
+    });
+  }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+#note {
+  display: grid;
+  grid-auto-rows: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.memo {
+  min-width: 240px;
+}
+</style>
