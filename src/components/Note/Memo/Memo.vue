@@ -1,21 +1,24 @@
 <template>
-  <v-card class="ml-4 mt-4">
-    <v-row>
-      <v-col>
-        <p>{{ text }}</p>
-      </v-col>
-    </v-row>
+  <v-card class="mx-2 mt-4 pa-3">
+    <twitter-memo
+      :memo="memo"
+      v-if="memo.provider === 'twitter.com'"
+    ></twitter-memo>
   </v-card>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+
+import TwitterMemo from '@/components/Note/Memo/TwitterMemo.vue';
+import { Memo as IMemo } from '@/types/memo';
+
 @Component({
-  components: {},
+  components: { TwitterMemo },
 })
 export default class Memo extends Vue {
   @Prop({ required: true })
-  public text?: string;
+  public memo!: IMemo;
 }
 </script>
 

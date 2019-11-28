@@ -8,12 +8,12 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Note from '@/components/Note/Note.vue';
 import firebase from '@/firebase';
-
+import { Memo } from '@/types/memo';
 @Component({
   components: { Note },
 })
 export default class NotePage extends Vue {
-  private note: Array<any> = [];
+  private note: Array<Memo> = [];
 
   public created() {
     this.fetchNote();
@@ -43,7 +43,7 @@ export default class NotePage extends Vue {
 
     ref.get().then((snapshots) => {
       snapshots.forEach((snapshot) => {
-        this.note.push(snapshot.data());
+        this.note.push(snapshot.data() as Memo);
       });
     });
   }

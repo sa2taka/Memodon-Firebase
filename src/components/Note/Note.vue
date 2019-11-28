@@ -1,7 +1,7 @@
 <template>
   <div id="note">
     <memo
-      :text="memo.text"
+      :memo="memo"
       v-for="memo in note"
       :key="memo.providerId + memo.id"
       class="memo"
@@ -11,7 +11,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import Memo from '@/components/Note/Memo.vue';
+import Memo from '@/components/Note/Memo/Memo.vue';
+import { Memo as IMemo } from '@/types/memo';
 // @ts-ignore
 import muuri from 'muuri';
 
@@ -20,15 +21,22 @@ import muuri from 'muuri';
 })
 export default class Note extends Vue {
   @Prop({ required: true })
-  public note: Array<any> | undefined;
+  public note: Array<IMemo> | undefined;
   private grid: any;
 
   public mounted() {
+    this.setGridRow();
+  }
+
+  private setGridRow() {
     const memos = document.querySelectorAll('.memo');
 
     memos.forEach((memo) => {
       const height = memo.scrollHeight;
-      memo.setAttribute('style', `grid-row: span ${Math.ceil(height / 20)};`);
+      memo.setAttribute(
+        'style',
+        `grid-row: span ${Math.ceil(height / 20) + 1};`
+      );
     });
   }
 }
