@@ -15,8 +15,6 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import Memo from '@/components/Note/Memo/Memo.vue';
 import { Memo as IMemo } from '@/types/memo';
-// @ts-ignore
-import muuri from 'muuri';
 
 @Component({
   components: { Memo },
@@ -28,7 +26,7 @@ export default class Note extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // transition-groupを利用するため > * を付与している
 #note > * {
   display: grid;
@@ -55,6 +53,7 @@ export default class Note extends Vue {
 
   &-leave-active {
     position: absolute;
+    z-index: -9999;
   }
 }
 </style>
