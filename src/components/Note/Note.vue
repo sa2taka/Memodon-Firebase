@@ -1,11 +1,13 @@
 <template>
   <div id="note">
-    <memo
-      :memo="memo"
-      v-for="memo in note"
-      :key="memo.providerId + memo.id"
-      class="memo"
-    ></memo>
+    <transition-group name="memo-list" tag="p" appear>
+      <memo
+        :memo="memo"
+        v-for="memo in note"
+        :key="memo.providerId + memo.id"
+        class="memo"
+      ></memo>
+    </transition-group>
   </div>
 </template>
 
@@ -26,8 +28,9 @@ export default class Note extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-#note {
+<style lang="scss">
+// transition-groupを利用するため > * を付与している
+#note > * {
   display: grid;
   grid-auto-rows: 20px;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -35,5 +38,23 @@ export default class Note extends Vue {
 
 .memo {
   min-width: 320px;
+  display: inline-block;
+  transition: all 0.4s;
+}
+
+.memo-list {
+  &-enter {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  &-leave-to {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  &-leave-active {
+    position: absolute;
+  }
 }
 </style>

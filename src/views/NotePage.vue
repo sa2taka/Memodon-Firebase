@@ -1,6 +1,6 @@
 <template>
   <v-container justify="center" mt-9>
-    <note :note="filterd" v-if="note.length !== 0"></note>
+    <note :note="filtered" v-if="note.length !== 0"></note>
   </v-container>
 </template>
 
@@ -14,7 +14,7 @@ import { Memo } from '@/types/memo';
 })
 export default class NotePage extends Vue {
   private note: Array<Memo> = [];
-  private filterd: Array<Memo> = [];
+  private filtered: Array<Memo> = [];
   private end?: firebase.firestore.Timestamp;
 
   public created() {
@@ -38,7 +38,7 @@ export default class NotePage extends Vue {
 
   @Watch('$route')
   private onChangeRoute() {
-    this.filterd = this.genFilterd();
+    this.filtered = this.genFilterd();
   }
 
   private fetchUsersNote(user: firebase.User) {
@@ -63,7 +63,7 @@ export default class NotePage extends Vue {
         this.end = snapshot.data().timestamp;
         this.note.push(snapshot.data() as Memo);
       });
-      this.filterd = this.genFilterd();
+      this.filtered = this.genFilterd();
     });
   }
 
