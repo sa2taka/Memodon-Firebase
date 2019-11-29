@@ -9,6 +9,7 @@ import { Component, Watch, Vue } from 'vue-property-decorator';
 import Note from '@/components/Note/Note.vue';
 import firebase from '@/firebase';
 import { Memo } from '@/types/memo';
+import User, { UserState } from '@/store/modules/user';
 @Component({
   components: { Note },
 })
@@ -22,18 +23,17 @@ export default class NotePage extends Vue {
   }
 
   private fetchNote() {
-    const currentUser = firebase.auth().currentUser;
+    const currentUser = User;
 
-    if (!currentUser) {
+    if (currentUser.uid && currentUser.uid == '') {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
-          this.fetchUsersNote(user);
+          return this.fetchUsersNote(user.uid);
         }
       });
-      return;
+    } else {
+      this.fetchUsersNote(currentUser.uid);
     }
-
-    this.fetchUsersNote(currentUser);
   }
 
   @Watch('$route')
@@ -41,11 +41,11 @@ export default class NotePage extends Vue {
     this.filtered = this.genFilterd();
   }
 
-  private fetchUsersNote(user: firebase.User) {
+  private fetchUsersNote(uid: string) {
     let ref = firebase
       .firestore()
       .collection('users')
-      .doc(user.uid)
+      .doc(uid)
       .collection('memos')
       .orderBy('timestamp', 'desc')
       .limit(100);

@@ -9,6 +9,7 @@ import store from '@/store/index';
 import firebase from '@/firebase';
 
 export interface UserState {
+  uid: string;
   twitterId: string;
   userName: string;
   displayName: string;
@@ -18,6 +19,7 @@ export interface UserState {
 
 @Module({ dynamic: true, store, name: 'user', namespaced: true })
 class User extends VuexModule implements UserState {
+  public uid: string = '';
   public twitterId: string = '';
   public userName: string = '';
   public displayName: string = '';
@@ -30,6 +32,7 @@ class User extends VuexModule implements UserState {
       this._signOut();
       return;
     }
+    this.uid = data.uid;
     this.twitterId = data.twitterId;
     this.userName = data.userName;
     this.displayName = data.displayName;
@@ -39,6 +42,7 @@ class User extends VuexModule implements UserState {
 
   @Mutation
   private _signOut() {
+    this.uid = '';
     this.twitterId = '';
     this.userName = '';
     this.displayName = '';
@@ -84,6 +88,7 @@ class User extends VuexModule implements UserState {
         const data = doc.data();
         if (doc.exists && typeof data !== 'undefined') {
           return {
+            uid: uid,
             twitterId: data.twitterId,
             userName: data.userName,
             displayName: data.displayName,
@@ -92,6 +97,7 @@ class User extends VuexModule implements UserState {
           };
         } else {
           return {
+            uid: '',
             twitterId: '',
             userName: '',
             displayName: '',
