@@ -36,6 +36,8 @@
 import { Component, Watch, Emit, Prop, Vue } from 'vue-property-decorator';
 import { uniq } from '@/libs/util';
 
+import Query from '@/store/modules/memoSearchQuery';
+
 @Component
 export default class NotePageHeader extends Vue {
   @Prop({ required: true })
@@ -64,15 +66,6 @@ export default class NotePageHeader extends Vue {
     });
   }
 
-  @Watch('$route')
-  private onChangeRoute() {
-    const query = this.$route.query.query;
-
-    if (typeof query === 'string' && query !== '') {
-      const splitedQuery = query.split('&');
-    }
-  }
-
   private onEdit() {
     this.input(this.searchQueries);
   }
@@ -82,10 +75,14 @@ export default class NotePageHeader extends Vue {
     tags: string[];
     words: string[];
     inputingWord: string;
-  }) {}
+  }) {
+    Query.setTags(this.searchTags);
+    Query.setWords(this.searchWords);
+    Query.setInputingWord(this.search);
+  }
 
   private get searchQueries() {
-    // なぜかsearchがnullになるため参考演算子を利用する
+    // なぜかsearchがnullになるため三項演算子を利用する
     const formatedSearching = this.search
       ? this.search.replace(/^\s+/g, '').replace(/\s+$/g, '')
       : '';

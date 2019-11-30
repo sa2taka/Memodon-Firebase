@@ -1,10 +1,6 @@
 <template>
   <v-container justify="center" mt-9>
-    <note-header
-      :tagsRef="tagsRef"
-      :userRef="userRef"
-      @input="filterByInput"
-    ></note-header>
+    <note-header :tagsRef="tagsRef" :userRef="userRef"></note-header>
     <note :note="filtered" v-if="note.length !== 0"></note>
   </v-container>
 </template>
@@ -18,6 +14,8 @@ import firebase from '@/firebase';
 
 import { Memo } from '@/types/memo';
 import User, { UserState } from '@/store/modules/user';
+import SearchQuery from '@/store/modules/memoSearchQuery';
+
 @Component({
   components: { Note, NoteHeader },
 })
@@ -33,6 +31,7 @@ export default class NotePage extends Vue {
   public created() {
     this.fetchNote();
     this.updateRef();
+    this.subscribeQuery();
   }
 
   private fetchNote() {
@@ -49,9 +48,16 @@ export default class NotePage extends Vue {
     });
   }
 
-  @Watch('$route')
-  private onChangeRoute() {
-    this.filterByQuery();
+  private subscribeQuery() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type.startsWith('memoSearchQuery')) {
+        this.filtered = this.filterNote(
+          SearchQuery.tags,
+          SearchQuery.words,
+          SearchQuery.inputingWord
+        );
+      }
+    });
   }
 
   private fetchUserIdAndRun(callback: (uid: string) => any) {
@@ -95,34 +101,8 @@ export default class NotePage extends Vue {
         this.end = snapshot.data().timestamp;
         this.note.push(snapshot.data() as Memo);
       });
-      this.filterByQuery();
+      this.filtered = this.note;
     });
-  }
-
-  private filterByQuery() {
-    const tags = this.$route.query.tags;
-    const words = this.$route.query.words;
-    const args = [];
-    if (tags) {
-      args.push(tags);
-    }
-    if (words) {
-      args.push(words);
-    }
-
-    this.filtered = this.filterNote(...args);
-  }
-
-  private filterByInput(query: {
-    tags: string[];
-    words: string[];
-    inputingWord: string;
-  }) {
-    this.filtered = this.filterNote(
-      query.tags,
-      query.words,
-      query.inputingWord
-    );
   }
 
   private filterNote(

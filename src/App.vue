@@ -21,11 +21,13 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import Theme from '@/store/modules/theme';
-import User, { UserState } from '@/store/modules/user';
 import UnauthMenu from '@/components/NavBar/UnauthMenu.vue';
 import SigningMenu from '@/components/NavBar/SigningMenu.vue';
 import { getRedirectResult } from '@/libs/signinWithTwitter';
+
+import Theme from '@/store/modules/theme';
+import User, { UserState } from '@/store/modules/user';
+import registerStore from '@/libs/storeRegister';
 
 @Component({
   components: {
@@ -39,7 +41,8 @@ export default class App extends Vue {
   private storageStateEntity: any = null;
 
   public async created() {
-    await this.initializeStore();
+    await registerStore();
+    this.setTheme();
     this.subscribeTheme();
     this.subscribeUser();
     await getRedirectResult();
@@ -48,9 +51,15 @@ export default class App extends Vue {
   public changedTheme(isDark: boolean) {
     this.updateTheme(isDark);
   }
+
   public get isSignin() {
     return this.user.isSignin;
   }
+
+  private setTheme() {
+    this.isDark = Theme.theme === 'dark';
+  }
+
   private subscribeTheme() {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type === 'theme/setTheme') {
@@ -58,43 +67,10 @@ export default class App extends Vue {
       }
     });
   }
+
   private updateTheme(isDark: boolean) {
     this.$vuetify.theme.dark = isDark;
     Theme.setTheme(isDark ? 'dark' : 'light');
-  }
-
-  // initialize store
-
-  private async initializeStore() {
-    if (!this.storageState) {
-      return;
-    }
-
-    this.setTheme();
-    await this.setUser();
-  }
-
-  private setTheme() {
-    Theme.setTheme(this.storageState.theme.theme);
-    this.isDark = this.storageState.theme.theme === 'dark';
-  }
-
-  private async setUser() {
-    User.setInfo(this.storageState.user);
-    await User.signIn();
-  }
-
-  private get storageState(): any {
-    if (this.storageStateEntity) {
-      return this.storageStateEntity;
-    }
-
-    try {
-      this.storageStateEntity = JSON.parse(localStorage.memodonState);
-    } catch (e) {
-      this.storageStateEntity = null;
-    }
-    return this.storageStateEntity;
   }
 
   private subscribeUser() {
