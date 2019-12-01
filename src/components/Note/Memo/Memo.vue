@@ -34,10 +34,7 @@ export default class Memo extends Vue {
 
   private setGridRow() {
     const height = this.$el.scrollHeight;
-    this.$el.setAttribute(
-      'style',
-      `grid-row: span ${Math.ceil(height / 20) + 2};`
-    );
+    this.$el.setAttribute('style', `grid-row: span ${Math.ceil(height / 20)};`);
   }
 }
 </script>
