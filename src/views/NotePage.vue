@@ -106,26 +106,23 @@ export default class NotePage extends Vue {
   }
 
   private filterNote(
-    tag?: (string | null)[] | string,
-    word?: (string | null)[] | string,
+    tags?: (string | null)[],
+    words?: (string | null)[],
     inputingWord?: string
   ): Memo[] {
     const queries: (string | null)[] = [];
-    if (tag && typeof tag === 'string') {
-      queries.push(tag);
-    } else if (tag) {
-      queries.push(...tag);
+    if (tags) {
+      queries.push(...this.removeEmpty(tags));
     }
 
-    if (word && typeof word === 'string') {
-      queries.push(word);
-    } else if (word) {
-      queries.push(...word);
+    if (words) {
+      queries.push(...this.removeEmpty(words));
     }
 
-    if (inputingWord) {
+    if (inputingWord && this.isEmptyOrOnlySpace(inputingWord)) {
       queries.push(inputingWord);
     }
+
     if (queries.length !== 0) {
       return this.note.filter((memo) => {
         return queries.some((q) => {
@@ -139,6 +136,16 @@ export default class NotePage extends Vue {
     } else {
       return this.note;
     }
+  }
+
+  private removeEmpty(ary: (string | null)[]) {
+    return ary.filter((str: string | null) => {
+      return str && this.isEmptyOrOnlySpace(str);
+    });
+  }
+
+  private isEmptyOrOnlySpace(str: string) {
+    return str.replace(/^\s+/g, '').replace(/\s+$/g, '') !== '';
   }
 }
 </script>

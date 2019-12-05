@@ -47,6 +47,11 @@ export default class memoSearcher extends Vue {
   private search: string = '';
   private tags: string[] = [];
 
+  public created() {
+    this.updateQuery();
+    this.subscribeQuery();
+  }
+
   public mounted() {
     this.fetchTags();
   }
@@ -108,6 +113,20 @@ export default class memoSearcher extends Vue {
       this.searchWords.push(formatedStr);
       this.search = '';
     }
+  }
+
+  private updateQuery() {
+    this.searchTags = this.removeSpace(Query.tags);
+    this.searchWords = this.removeSpace(Query.words);
+    this.search = Query.inputingWord;
+  }
+
+  private subscribeQuery() {
+    this.$store.subscribe((mutation, state) => {
+      if (mutation.type.startsWith('memoSearchQuery')) {
+        this.updateQuery();
+      }
+    });
   }
 
   @Watch('tagsRef')

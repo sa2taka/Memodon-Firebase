@@ -8,24 +8,24 @@ import {
 import store from '@/store/index';
 
 export interface MemoSearchQueryState {
-  tags: string[] | string;
-  words: string[] | string;
+  tags: string[];
+  words: string[];
   inputingWord: string;
 }
 
 @Module({ dynamic: true, store, name: 'memoSearchQuery', namespaced: true })
 class MemoSearchQuery extends VuexModule implements MemoSearchQueryState {
-  public tags: string[] | string = '';
-  public words: string[] | string = '';
+  public tags: string[] = [''];
+  public words: string[] = [''];
   public inputingWord: string = '';
 
   @Mutation
-  public setTags(tags: string[] | string) {
+  public setTags(tags: string[]) {
     this.tags = tags;
   }
 
   @Mutation
-  public setWords(words: string[] | string) {
+  public setWords(words: string[]) {
     this.words = words;
   }
 

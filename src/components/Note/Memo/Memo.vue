@@ -13,6 +13,8 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import TwitterMemo from '@/components/Note/Memo/TwitterMemo.vue';
 import { Memo as IMemo } from '@/types/memo';
 
+import MemoSearchQuery from '@/store/modules/memoSearchQuery';
+
 @Component({
   components: { TwitterMemo },
 })
@@ -27,7 +29,7 @@ export default class Memo extends Vue {
   private registerMemoTagClickListener() {
     this.$el.querySelectorAll('.memo-tag').forEach((elm) => {
       elm.addEventListener('click', () => {
-        this.$router.push({ name: 'note', query: { tags: elm.innerHTML } });
+        MemoSearchQuery.setTags([elm.innerHTML]);
       });
     });
   }
