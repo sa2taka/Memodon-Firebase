@@ -30,7 +30,7 @@ export default class Note extends Vue {
 // transition-groupを利用するため > * を付与している
 #note > * {
   display: grid;
-  grid-auto-rows: 20px;
+  grid-template-rows: 20px;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
 }
 
@@ -38,6 +38,7 @@ export default class Note extends Vue {
   min-width: 320px;
   display: inline-block;
   transition: all 0.4s;
+  box-sizing: border-box;
 }
 
 .memo-list {

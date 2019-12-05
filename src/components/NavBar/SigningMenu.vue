@@ -54,10 +54,10 @@ export default class SigningMenu extends Vue {
   private signout() {
     User.signOut()
       .then(() => {
-        this.$router.push('/');
+        this.$router.push({ name: 'top' });
       })
       .catch(() => {
-        this.$router.push('/');
+        this.$router.push({ name: 'top' });
       });
   }
 

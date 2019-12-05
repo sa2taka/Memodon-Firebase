@@ -1,30 +1,43 @@
 <template>
-  <header>
-    <fetch-memo-button class="fetch-memo-button"></fetch-memo-button>
-    <memo-searcher
-      class="mt-4"
-      :tagsRef="tagsRef"
-      :userRef="userRef"
-    ></memo-searcher>
-  </header>
+  <v-expansion-panels>
+    <v-expansion-panel>
+      <v-expansion-panel-header>Search</v-expansion-panel-header>
+      <v-expansion-panel-content>
+        <v-autocomplete
+          v-model="searchTags"
+          :items="tags"
+          dense
+          chips
+          small-chips
+          label="Tags"
+          multiple
+          hide-selected
+          class="mt-3"
+          @input="onEdit"
+        ></v-autocomplete>
+        <v-combobox
+          v-model="searchWords"
+          label="Search Word"
+          :search-input.sync="search"
+          multiple
+          small-chips
+          @update:search-input="onEdit"
+          @keyup.space="splitSearchWord"
+          @blur="splitSearchWord"
+        ></v-combobox>
+      </v-expansion-panel-content>
+    </v-expansion-panel>
+  </v-expansion-panels>
 </template>
 
 <script lang="ts">
 import { Component, Watch, Emit, Prop, Vue } from 'vue-property-decorator';
 import { uniq } from '@/libs/util';
 
-import memoSearcher from '@/components/Note/Header/memoSearcher.vue';
-import fetchMemoButton from '@/components/Note/Header/fetchMemoButton.vue';
-
 import Query from '@/store/modules/memoSearchQuery';
 
-@Component({
-  components: {
-    memoSearcher,
-    fetchMemoButton,
-  },
-})
-export default class NotePageHeader extends Vue {
+@Component
+export default class memoSearcher extends Vue {
   @Prop({ required: true })
   public tagsRef!: firebase.firestore.CollectionReference;
   @Prop()
@@ -104,10 +117,4 @@ export default class NotePageHeader extends Vue {
 }
 </script>
 
-<style lang="scss" scoped>
-.fetch-memo-button {
-  margin-right: 0;
-  margin-left: auto;
-  display: block;
-}
-</style>
+<style lang="scss" scoped></style>

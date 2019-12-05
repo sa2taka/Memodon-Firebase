@@ -1,9 +1,20 @@
 import { firestore } from 'firebase-admin';
 
-export function fetchAllUsersNote(snapshot: firestore.DocumentSnapshot) {
-  // TODO fetch twitter and users note
+import updateNote from '../firestore/updateNote';
+
+export function fetchAllUsersNote(userSnapshot: firestore.DocumentSnapshot) {
+  // const subUserCollecgion = snapshot.ref.collection('subUsers');
+  const promises = [updateNote(userSnapshot)];
+
+  return Promise.all(promises);
 }
 
 export function fetchUserFromFireStore(uuid: string) {
-  // TODO fetch user snapshot from uuid
+  return firestore()
+    .collection('users')
+    .doc(uuid)
+    .get()
+    .then((snap: firestore.DocumentSnapshot) => {
+      return fetchAllUsersNote(snap);
+    });
 }

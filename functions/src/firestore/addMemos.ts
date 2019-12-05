@@ -1,7 +1,7 @@
 import { firestore } from 'firebase-admin';
 const crypto = require('crypto');
 
-export default function addMemo(note: Array<any>, userId: string) {
+export default function addMemos(note: Array<any>, userId: string) {
   return Promise.all([
     addNoteIntoMemoCollection(note),
     addNoteIntoUserSubCollection(note, userId),
