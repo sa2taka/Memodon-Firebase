@@ -92,7 +92,7 @@ export default class NotePage extends Vue {
       ref = ref.endBefore(this.end);
     }
 
-    ref.get().then((snapshots) => {
+    ref.onSnapshot((snapshots) => {
       if (snapshots.empty) {
         return;
       }
