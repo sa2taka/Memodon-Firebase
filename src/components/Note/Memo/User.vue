@@ -3,9 +3,9 @@
     <img class="icon ml-4 mr-2" v-lazy="user.iconUrl" v-if="user" />
     <div class="name" v-if="user">
       <span class="display-name">{{ user.displayName }}</span>
-      <span class="username">
-        {{ user.provider || 'twitter.com' }}@{{ user.userName }}
-      </span>
+      <span class="username"
+        >{{ user.provider || 'twitter.com' }}@{{ user.userName }}</span
+      >
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@ export default class User extends Vue {
   private user: any = null;
 
   public created() {
-    this.userRef.get().then((snap) => {
+    this.userRef.onSnapshot((snap) => {
       this.user = snap.data();
     });
   }

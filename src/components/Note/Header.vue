@@ -44,7 +44,7 @@ export default class NotePageHeader extends Vue {
     }
 
     this.tags = [];
-    this.tagsRef.get().then((tags) => {
+    this.tagsRef.onSnapshot((tags) => {
       tags.forEach((tag) => {
         this.tags.push('#' + tag.data().text);
       });
