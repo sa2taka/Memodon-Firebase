@@ -79,9 +79,16 @@ export default class memoSearcher extends Vue {
     words: string[];
     inputingWord: string;
   }) {
-    Query.setTags(this.searchTags);
-    Query.setWords(this.searchWords);
-    Query.setInputingWord(this.search);
+    // search ～ は参照先がMemoSearchQueryなので===で比較可能
+    if (Query.tags !== this.searchTags) {
+      Query.setTags(this.searchTags);
+    }
+    if (Query.words !== this.searchWords) {
+      Query.setWords(this.searchWords);
+    }
+    if (Query.inputingWord !== this.search) {
+      Query.setInputingWord(this.search);
+    }
   }
 
   private get searchQueries() {
@@ -98,15 +105,6 @@ export default class memoSearcher extends Vue {
     };
   }
 
-  private removeSpace(arr: string[]) {
-    const emptyRemoved = arr.filter((str) => {
-      return str.replace(/^\s+/g, '').replace(/\s+$/g, '') !== '';
-    });
-    return emptyRemoved.map((str) => {
-      return str.replace(/^\s+/g, '').replace(/\s+$/g, '');
-    });
-  }
-
   private splitSearchWord() {
     const formatedStr = this.search.replace(/^\s+/g, '').replace(/\s+$/g, '');
     if (formatedStr !== '') {
@@ -116,8 +114,8 @@ export default class memoSearcher extends Vue {
   }
 
   private updateQuery() {
-    this.searchTags = this.removeSpace(Query.tags);
-    this.searchWords = this.removeSpace(Query.words);
+    this.searchTags = Query.tags;
+    this.searchWords = Query.words;
     this.search = Query.inputingWord;
   }
 
@@ -127,6 +125,19 @@ export default class memoSearcher extends Vue {
         this.updateQuery();
       }
     });
+  }
+
+  private removeSpace(arr: string[]) {
+    const emptyRemoved = arr.filter((str) => {
+      return this.isEmptyOrOnlySpace(str);
+    });
+    return emptyRemoved.map((str) => {
+      return str.replace(/^\s+/g, '').replace(/\s+$/g, '');
+    });
+  }
+
+  private isEmptyOrOnlySpace(str: string) {
+    return str.replace(/^\s+/g, '').replace(/\s+$/g, '') !== '';
   }
 
   @Watch('tagsRef')

@@ -15,8 +15,8 @@ export interface MemoSearchQueryState {
 
 @Module({ dynamic: true, store, name: 'memoSearchQuery', namespaced: true })
 class MemoSearchQuery extends VuexModule implements MemoSearchQueryState {
-  public tags: string[] = [''];
-  public words: string[] = [''];
+  public tags: string[] = [];
+  public words: string[] = [];
   public inputingWord: string = '';
 
   @Mutation
