@@ -13,6 +13,9 @@
       @keyup.space="splitSearchWord"
       @blur="splitSearchWord"
     >
+      <template v-slot:prepend>
+        <v-icon color="primary">fa-search</v-icon>
+      </template>
       <template v-slot:append>
         <v-btn text icon @click.stop="clear">
           <v-icon>fa-times</v-icon>
