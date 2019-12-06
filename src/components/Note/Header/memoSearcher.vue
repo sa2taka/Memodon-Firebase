@@ -1,38 +1,25 @@
 <template>
-  <v-expansion-panels>
-    <v-expansion-panel>
-      <v-expansion-panel-header>Search</v-expansion-panel-header>
-      <v-expansion-panel-content>
-        <v-autocomplete
-          v-model="searchTags"
-          :items="tags"
-          dense
-          chips
-          small-chips
-          label="Tags"
-          multiple
-          hide-selected
-          class="mt-3"
-          @input="onEdit"
-        ></v-autocomplete>
-        <v-combobox
-          v-model="searchWords"
-          label="Search Word"
-          :search-input.sync="search"
-          multiple
-          small-chips
-          @update:search-input="onEdit"
-          @keyup.space="splitSearchWord"
-          @blur="splitSearchWord"
-        ></v-combobox>
-        <div class="serach-footer">
-          <v-btn color="primary" @click="clear">
-            <v-icon class="mr-2">fa-times</v-icon>Clear
-          </v-btn>
-        </div>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
+  <div class="memo-searcher">
+    <v-combobox
+      v-model="searchWords"
+      label="Search"
+      :placeholder="$t('placeholder')"
+      :search-input.sync="search"
+      :items="tags"
+      multiple
+      hide-selected
+      small-chips
+      @update:search-input="onEdit"
+      @keyup.space="splitSearchWord"
+      @blur="splitSearchWord"
+    >
+      <template v-slot:append>
+        <v-btn text icon @click.stop="clear">
+          <v-icon>fa-times</v-icon>
+        </v-btn>
+      </template>
+    </v-combobox>
+  </div>
 </template>
 
 <script lang="ts">
@@ -47,7 +34,6 @@ export default class memoSearcher extends Vue {
   public tagsRef!: firebase.firestore.CollectionReference;
   @Prop()
   public userRef?: firebase.firestore.DocumentReference;
-  private searchTags: string[] = [];
   private searchWords: string[] = [];
   private search: string = '';
   private tags: string[] = [];
@@ -75,7 +61,6 @@ export default class memoSearcher extends Vue {
   }
 
   private clear() {
-    this.searchTags = [];
     this.searchWords = [];
     this.search = '';
     Query.clear();
@@ -86,15 +71,8 @@ export default class memoSearcher extends Vue {
   }
 
   @Emit('input')
-  private input(query: {
-    tags: string[];
-    words: string[];
-    inputingWord: string;
-  }) {
+  private input(query: { words: string[]; inputingWord: string }) {
     // search ～ は参照先がMemoSearchQueryなので===で比較可能
-    if (Query.tags !== this.searchTags) {
-      Query.setTags(this.searchTags);
-    }
     if (Query.words !== this.searchWords) {
       Query.setWords(this.searchWords);
     }
@@ -108,10 +86,8 @@ export default class memoSearcher extends Vue {
     const formatedSearching = this.search
       ? this.search.replace(/^\s+/g, '').replace(/\s+$/g, '')
       : '';
-    const formatedTags = this.removeSpace(this.searchTags);
     const formatedWords = this.removeSpace(this.searchWords);
     return {
-      tags: formatedTags,
       words: formatedWords,
       inputingWord: formatedSearching,
     };
@@ -127,9 +103,6 @@ export default class memoSearcher extends Vue {
 
   private updateQuery() {
     // search ～ は参照先がMemoSearchQueryなので===で比較可能
-    if (Query.tags !== this.searchTags) {
-      this.searchTags = Query.tags;
-    }
     if (Query.words !== this.searchWords) {
       this.searchWords = Query.words;
     }
@@ -173,3 +146,14 @@ export default class memoSearcher extends Vue {
   display: block;
 }
 </style>
+
+<i18n>
+{
+  "us": {
+    "placeholder": "Press space or enter to split"
+  },
+  "jp": {
+    "placeholder": "スペースまたはエンターで文字区切り"
+  }
+}
+</i18n>

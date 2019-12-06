@@ -29,7 +29,7 @@ export default class Memo extends Vue {
   private registerMemoTagClickListener() {
     this.$el.querySelectorAll('.memo-tag').forEach((elm) => {
       elm.addEventListener('click', () => {
-        MemoSearchQuery.setTags([elm.innerHTML]);
+        MemoSearchQuery.setWords([elm.innerHTML]);
       });
     });
   }

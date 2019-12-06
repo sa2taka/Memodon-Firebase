@@ -52,7 +52,6 @@ export default class NotePage extends Vue {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type.startsWith('memoSearchQuery')) {
         this.filtered = this.filterNote(
-          SearchQuery.tags,
           SearchQuery.words,
           SearchQuery.inputingWord
         );
@@ -105,16 +104,8 @@ export default class NotePage extends Vue {
     });
   }
 
-  private filterNote(
-    tags?: (string | null)[],
-    words?: (string | null)[],
-    inputingWord?: string
-  ): Memo[] {
+  private filterNote(words?: (string | null)[], inputingWord?: string): Memo[] {
     const queries: (string | null)[] = [];
-    if (tags) {
-      queries.push(...this.removeEmpty(tags));
-    }
-
     if (words) {
       queries.push(...this.removeEmpty(words));
     }
