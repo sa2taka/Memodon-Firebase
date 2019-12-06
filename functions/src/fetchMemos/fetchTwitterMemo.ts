@@ -100,7 +100,7 @@ function get(url: string, token: string, tokenSecret: string, qs: any) {
   return rp({
     method: 'GET',
     uri: url,
-    timeout: 30 * 1000,
+    timeout: 60 * 1000,
     oauth: {
       consumer_key: consumerKey,
       consumer_secret: consumerSecret,

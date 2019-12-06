@@ -20,14 +20,6 @@
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title>
-          <v-btn @click="fetchMemo">fetch memo</v-btn>
-        </v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-
-    <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title>
           <div class="signout-button">
             <v-btn depressed rounded color="primary" @click="signout">
               <v-icon small left>fa-sign-out-alt</v-icon>
@@ -62,14 +54,12 @@ export default class SigningMenu extends Vue {
   private signout() {
     User.signOut()
       .then(() => {
-        this.$router.push('/');
+        this.$router.push({ name: 'top' });
       })
       .catch(() => {
-        this.$router.push('/');
+        this.$router.push({ name: 'top' });
       });
   }
-
-  private async fetchMemo() {}
 
   private subscribeUser() {
     this.$store.subscribe((mutation, state) => {

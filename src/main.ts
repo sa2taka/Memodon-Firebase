@@ -6,6 +6,7 @@ import store from './store';
 import vuetify from './plugins/vuetify';
 import i18n from './i18n';
 import './firebase';
+import './plugins/vueLazyload';
 
 Vue.config.productionTip = false;
 
