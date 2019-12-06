@@ -33,6 +33,13 @@ class MemoSearchQuery extends VuexModule implements MemoSearchQueryState {
   public setInputingWord(word: string) {
     this.inputingWord = word;
   }
+
+  @Mutation
+  public clear() {
+    this.tags = [];
+    this.words = [];
+    this.inputingWord = '';
+  }
 }
 
 const module = getModule(MemoSearchQuery);

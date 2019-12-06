@@ -25,6 +25,11 @@
           @keyup.space="splitSearchWord"
           @blur="splitSearchWord"
         ></v-combobox>
+        <div class="serach-footer">
+          <v-btn color="primary" @click="clear">
+            <v-icon class="mr-2">fa-times</v-icon>Clear
+          </v-btn>
+        </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -67,6 +72,13 @@ export default class memoSearcher extends Vue {
         this.tags.push('#' + tag.data().text);
       });
     });
+  }
+
+  private clear() {
+    this.searchTags = [];
+    this.searchWords = [];
+    this.search = '';
+    Query.clear();
   }
 
   private onEdit() {
@@ -114,9 +126,16 @@ export default class memoSearcher extends Vue {
   }
 
   private updateQuery() {
-    this.searchTags = Query.tags;
-    this.searchWords = Query.words;
-    this.search = Query.inputingWord;
+    // search ～ は参照先がMemoSearchQueryなので===で比較可能
+    if (Query.tags !== this.searchTags) {
+      this.searchTags = Query.tags;
+    }
+    if (Query.words !== this.searchWords) {
+      this.searchWords = Query.words;
+    }
+    if (Query.inputingWord !== this.search) {
+      this.search = Query.inputingWord;
+    }
   }
 
   private subscribeQuery() {
@@ -147,4 +166,10 @@ export default class memoSearcher extends Vue {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.serach-footer > button {
+  margin-right: 0;
+  margin-left: auto;
+  display: block;
+}
+</style>
