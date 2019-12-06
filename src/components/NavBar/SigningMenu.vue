@@ -1,12 +1,17 @@
 <template>
   <nav-bar-menu :menu="false">
-    <v-list-item
-      @click="
-        '';
+    <v-subheader class="mb-2">
+      <div class="account-title">Account</div>
+      <div class="ml-auto mr-0">
+        <v-btn depressed small color="accent" @click="signout">
+          <v-icon small left>fa-sign-out-alt</v-icon>
+          <p class="my-auto">Signout</p>
+        </v-btn>
+      </div>
+    </v-subheader>
+    <v-divider></v-divider>
 
-
-      "
-    >
+    <v-list-item>
       <v-list-item-avatar>
         <v-img :src="user.iconUrl"></v-img>
       </v-list-item-avatar>
@@ -17,18 +22,17 @@
       </v-list-item-content>
     </v-list-item>
 
-    <v-list-item>
-      <v-list-item-content>
-        <v-list-item-title>
-          <div class="signout-button">
-            <v-btn depressed rounded color="primary" @click="signout">
-              <v-icon small left>fa-sign-out-alt</v-icon>
-              <p class="my-auto">Signout</p>
-            </v-btn>
-          </div>
-        </v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
+    <v-list-item-group>
+      <v-subheader>{{ $t('settings') }}</v-subheader>
+      <v-list-item @click="item" v-for="item in settingsItems" :key="item">
+        <v-list-item-icon>
+          <v-icon small>fa-{{ item }}</v-icon>
+        </v-list-item-icon>
+        <v-list-item-content>
+          <v-list-item-title>{{ $t(item) }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list-item-group>
   </nav-bar-menu>
 </template>
 
@@ -47,6 +51,8 @@ import User, { UserState } from '@/store/modules/user';
 })
 export default class SigningMenu extends Vue {
   private user: UserState = User;
+  private settingsItems = ['users', 'tags'];
+
   public created() {
     this.subscribeUser();
   }
@@ -72,9 +78,27 @@ export default class SigningMenu extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.account-title {
+  font-size: 1.2em;
+}
 .signout-button {
   position: relative;
   width: 100%;
   text-align: end;
 }
 </style>
+
+<i18n>
+{
+  "us": {
+    "settings": "Settings",
+    "users": "User",
+    "tags": "Label"
+  },
+  "jp": {
+    "settings": "設定",
+    "users": "ユーザー",
+    "tags": "ラベル"
+  }
+}
+</i18n>
