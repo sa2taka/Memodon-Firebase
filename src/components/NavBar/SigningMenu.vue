@@ -11,7 +11,7 @@
     </v-subheader>
     <v-divider></v-divider>
 
-    <v-list-item>
+    <v-list-item @click="user">
       <v-list-item-avatar>
         <v-img :src="user.iconUrl"></v-img>
       </v-list-item-avatar>
@@ -87,18 +87,3 @@ export default class SigningMenu extends Vue {
   text-align: end;
 }
 </style>
-
-<i18n>
-{
-  "us": {
-    "settings": "Settings",
-    "users": "User",
-    "tags": "Label"
-  },
-  "jp": {
-    "settings": "設定",
-    "users": "ユーザー",
-    "tags": "ラベル"
-  }
-}
-</i18n>

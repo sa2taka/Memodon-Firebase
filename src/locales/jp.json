@@ -1,3 +1,6 @@
 {
-  "message": "hello i18n !!"
+  "settings": "設定",
+  "account": "マイアカウント",
+  "users": "ユーザー",
+  "tags": "ラベル"
 }

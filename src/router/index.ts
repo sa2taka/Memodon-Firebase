@@ -4,6 +4,7 @@ import firebase from '../firebase';
 
 import Top from '../views/Top.vue';
 import Note from '../views/NotePage.vue';
+import Settings from '../views/Settings.vue';
 
 Vue.use(VueRouter);
 
@@ -18,6 +19,30 @@ const routes = [
     path: '/note',
     name: 'note',
     component: Note,
+    meta: { auth: true },
+  },
+  {
+    path: '/setting',
+    name: 'setting',
+    component: Settings,
+    meta: { auth: true },
+  },
+  {
+    path: '/setting#account',
+    name: 'setting-account',
+    component: Settings,
+    meta: { auth: true },
+  },
+  {
+    path: '/setting#users',
+    name: 'setting-users',
+    component: Settings,
+    meta: { auth: true },
+  },
+  {
+    path: '/setting#tags',
+    name: 'setting-tags',
+    component: Settings,
     meta: { auth: true },
   },
 ];
