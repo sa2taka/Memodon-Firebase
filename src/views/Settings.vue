@@ -1,5 +1,10 @@
 <template>
   <div id="setting">
+    <v-btn text class="backToNote mt-2" @click="$router.push({ name: 'note' })">
+      <v-icon small class="mr-1">fa-arrow-left</v-icon>
+      <p>{{ $t('backToNote') }}</p>
+    </v-btn>
+
     <div class="my-3 grey--text lighten-2 setting-title">
       <h1>{{ $t('settings') }}</h1>
     </div>
@@ -71,4 +76,25 @@ export default class Settings extends Vue {
 .setting-title {
   text-align: center;
 }
+
+.backToNote {
+  display: flex;
+  align-items: center;
+
+  & * {
+    height: 1.4em;
+    margin: auto 0;
+  }
+}
 </style>
+
+<i18n>
+{
+"jp": {
+  "backToNote": "メモ帳へ戻る"
+},
+"en": {
+  "backToNote": "Back to note"
+}
+}
+</i18n>
