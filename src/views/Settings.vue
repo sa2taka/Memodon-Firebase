@@ -9,17 +9,11 @@
       <h1>{{ $t('settings') }}</h1>
     </div>
     <v-tabs centered v-model="tab">
-      <v-tab>{{ $t('account') }}</v-tab>
       <v-tab>{{ $t('users') }}</v-tab>
       <v-tab>{{ $t('tags') }}</v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
-      <v-tab-item>
-        <v-row justify="center">
-          <my-account></my-account>
-        </v-row>
-      </v-tab-item>
       <v-tab-item>
         <v-row justify="center">
           <users></users>
@@ -36,13 +30,11 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-property-decorator';
-import MyAccount from '@/components/Setting/MyAccount.vue';
 import Users from '@/components/Setting/Users.vue';
 import Labels from '@/components/Setting/Labels.vue';
 
 @Component({
   components: {
-    MyAccount,
     Users,
     Labels,
   },
@@ -63,15 +55,12 @@ export default class Settings extends Vue {
     switch (this.$route.name) {
       case 'setting-account':
         this.tab = 0;
-        this.$router.replace({ name: 'setting' });
         break;
       case 'setting-users':
-        this.tab = 1;
-        this.$router.replace({ name: 'setting' });
+        this.tab = 0;
         break;
       case 'setting-tags':
-        this.tab = 2;
-        this.$router.replace({ name: 'setting' });
+        this.tab = 1;
         break;
     }
   }
