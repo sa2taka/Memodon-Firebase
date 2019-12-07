@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Watch, Vue } from 'vue-property-decorator';
 import MyAccount from '@/components/Setting/MyAccount.vue';
 import Users from '@/components/Setting/Users.vue';
 import Labels from '@/components/Setting/Labels.vue';
@@ -38,6 +38,32 @@ import Labels from '@/components/Setting/Labels.vue';
 })
 export default class Settings extends Vue {
   private tab: any = null;
+
+  public mounted() {
+    this.switchSetting();
+  }
+
+  @Watch('$route')
+  private onChangeRouter() {
+    this.switchSetting();
+  }
+
+  private switchSetting() {
+    switch (this.$route.name) {
+      case 'setting-account':
+        this.tab = 0;
+        this.$router.replace({ name: 'setting' });
+        break;
+      case 'setting-users':
+        this.tab = 1;
+        this.$router.replace({ name: 'setting' });
+        break;
+      case 'setting-tags':
+        this.tab = 2;
+        this.$router.replace({ name: 'setting' });
+        break;
+    }
+  }
 }
 </script>
 

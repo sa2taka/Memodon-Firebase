@@ -11,7 +11,7 @@
     </v-subheader>
     <v-divider></v-divider>
 
-    <v-list-item @click="user">
+    <v-list-item @click="$router.push({ name: 'setting-account' })">
       <v-list-item-avatar>
         <v-img :src="user.iconUrl"></v-img>
       </v-list-item-avatar>
@@ -24,7 +24,11 @@
 
     <v-list-item-group>
       <v-subheader>{{ $t('settings') }}</v-subheader>
-      <v-list-item @click="item" v-for="item in settingsItems" :key="item">
+      <v-list-item
+        @click="$router.push({ name: `setting-${item}` })"
+        v-for="item in settingsItems"
+        :key="item"
+      >
         <v-list-item-icon>
           <v-icon small>fa-{{ item }}</v-icon>
         </v-list-item-icon>
