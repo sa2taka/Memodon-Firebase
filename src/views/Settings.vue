@@ -16,13 +16,19 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <my-account></my-account>
+        <v-row justify="center">
+          <my-account></my-account>
+        </v-row>
       </v-tab-item>
       <v-tab-item>
-        <users></users>
+        <v-row justify="center">
+          <users></users>
+        </v-row>
       </v-tab-item>
       <v-tab-item>
-        <labels></labels>
+        <v-row justify="center">
+          <labels></labels>
+        </v-row>
       </v-tab-item>
     </v-tabs-items>
   </div>

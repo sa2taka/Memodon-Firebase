@@ -1,4 +1,8 @@
-<template><p>users</p></template>
+<template>
+  <div id="users" class="mt-4">
+    users
+  </div>
+</template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';

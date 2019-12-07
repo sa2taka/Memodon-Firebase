@@ -1,4 +1,8 @@
-<template><p>label</p></template>
+<template>
+  <div id="labels" class="mt-4">
+    labels
+  </div>
+</template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
