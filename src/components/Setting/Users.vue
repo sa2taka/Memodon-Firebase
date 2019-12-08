@@ -4,6 +4,14 @@
       {{ $t('main-account') }}
     </v-subheader>
     <user-info :user="mainUser"></user-info>
+
+    <v-divider></v-divider>
+
+    <v-subheader>
+      {{ $t('sub-account') }}
+    </v-subheader>
+
+    <add-account-buttons></add-account-buttons>
   </div>
 </template>
 
@@ -12,10 +20,12 @@ import { Component, Vue } from 'vue-property-decorator';
 import User, { UserState } from '@/store/modules/user';
 
 import UserInfo from '@/components/Setting/UserInfo.vue';
+import AddAccountButtons from '@/components/Setting/AddAccountButtons.vue';
 
 @Component({
   components: {
     UserInfo,
+    AddAccountButtons,
   },
 })
 export default class Users extends Vue {
@@ -45,10 +55,12 @@ export default class Users extends Vue {
 {
   "jp": {
     "main-account": "メインアカウント",
+    "sub-account": "サブアカウント",
     "openInfo": "Twitterのユーザーページを開く"
   },
   "en": {
     "main-account": "Main Account",
+    "sub-account": "Sub Accounts",
     "openInfo": "Open twitter user page"
   }
 }
