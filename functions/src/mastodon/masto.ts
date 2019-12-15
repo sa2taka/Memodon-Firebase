@@ -2,11 +2,8 @@ import Masto, { GatewayConstructorParams } from 'masto';
 import { reject } from 'bluebird';
 
 export default function masto(params: GatewayConstructorParams) {
-  const masto = new Masto(params);
-
-  return masto
-    .fetchInstance()
-    .then((_) => {
+  return Masto.login(params)
+    .then((masto) => {
       return masto;
     })
     .catch((error) => {
