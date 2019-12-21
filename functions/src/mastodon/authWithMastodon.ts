@@ -46,8 +46,8 @@ export function getAuthenticateUrl(originUri: string) {
     });
 }
 
-function authorize(masto: Masto, clientId: string, clientSecret: string) {
-  return masto.get<any>(
+function authorize(instance: Masto, clientId: string, clientSecret: string) {
+  return instance.get<any>(
     '/oauth/authorize',
     authorizeConfig(clientId, clientSecret),
     {
