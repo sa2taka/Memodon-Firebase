@@ -5,7 +5,7 @@ import { authorizeConfig } from './config';
 import masto from '../mastodon/masto';
 import { createMastodonApp } from '../mastodon/mastodonAppCreator';
 
-export function authorizeFlow(originUri: string) {
+export function getAuthenticateUrl(originUri: string) {
   const uriWithURLObject = new URL(originUri);
   const uri = uriWithURLObject.origin;
   let instance!: Masto;
