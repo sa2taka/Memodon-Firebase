@@ -8,9 +8,13 @@
         class="mt-8"
         :loading="isLoading"
       ></v-text-field>
-      <v-btn color="primary" class="ml-2 my-auto" @click="gotoAuthPage">{{
-        $t('gotoAuthPage')
-      }}</v-btn>
+      <v-btn
+        color="primary"
+        class="ml-2 my-auto"
+        :loading="isLoading"
+        @click="gotoAuthPage"
+        >{{ $t('gotoAuthPage') }}</v-btn
+      >
     </v-row>
   </v-container>
 </template>
