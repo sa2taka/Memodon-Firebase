@@ -5,6 +5,7 @@ import firebase from '../firebase';
 import Top from '../views/Top.vue';
 import Note from '../views/NotePage.vue';
 import Settings from '../views/Settings.vue';
+import AuthWithMastodon from '../views/AuthWithMastodon.vue';
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,12 @@ const routes = [
     path: '/setting#tags',
     name: 'setting-tags',
     component: Settings,
+    meta: { auth: true },
+  },
+  {
+    path: '/auth/mastodon',
+    name: 'authWithMastodon',
+    component: AuthWithMastodon,
     meta: { auth: true },
   },
 ];

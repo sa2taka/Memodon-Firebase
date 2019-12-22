@@ -1,15 +1,11 @@
 <template>
   <div id="account" class="mt-4">
-    <v-subheader>
-      {{ $t('main-account') }}
-    </v-subheader>
+    <v-subheader>{{ $t('main-account') }}</v-subheader>
     <user-info :user="mainUser"></user-info>
 
     <v-divider></v-divider>
 
-    <v-subheader>
-      {{ $t('sub-account') }}
-    </v-subheader>
+    <v-subheader>{{ $t('sub-account') }}</v-subheader>
 
     <add-account-buttons></add-account-buttons>
   </div>
