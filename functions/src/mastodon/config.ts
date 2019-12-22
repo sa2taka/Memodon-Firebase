@@ -8,13 +8,3 @@ export const appConfig = {
   scopes: scope,
   website: 'https://memodon.com',
 };
-
-export const authorizeConfig = (clinet_id: string, client_secret: string) => {
-  return {
-    response_type: 'code',
-    redirect_uris,
-    scope,
-    clinet_id,
-    client_secret,
-  };
-};

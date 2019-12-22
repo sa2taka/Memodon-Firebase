@@ -1,4 +1,4 @@
-import { getAuthenticateUrl } from '../../mastodon/authWithMastodon';
+import { getClientInfo } from '../../mastodon/authWithMastodon';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
 const functions = require('firebase-functions');
 
@@ -11,7 +11,7 @@ export const authenticateMastodon = functions
   .runWith(runtimeOpts)
   .https.onCall((data: any, context: CallableContext) => {
     if (context.auth) {
-      return getAuthenticateUrl(data.uri);
+      return getClientInfo(data.uri);
     } else {
       throw new Error('unauthenticate');
     }

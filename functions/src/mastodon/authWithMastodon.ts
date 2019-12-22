@@ -1,11 +1,10 @@
 import Masto from 'masto';
 import { firestore } from 'firebase-admin';
-import { authorizeConfig } from './config';
 
 import masto from '../mastodon/masto';
 import { createMastodonApp } from '../mastodon/mastodonAppCreator';
 
-export function getAuthenticateUrl(originUri: string) {
+export function getClientInfo(originUri: string) {
   const uriWithURLObject = new URL(originUri);
   const uri = uriWithURLObject.origin;
   let instance!: Masto;
@@ -24,34 +23,22 @@ export function getAuthenticateUrl(originUri: string) {
       if (snap.exists) {
         const instanceData = snap.data();
         if (instanceData) {
-          // 整合性を取るためにsnake case
           return Promise.resolve({
-            client_id: instanceData.clientId,
-            client_secret: instanceData.clientSecret,
+            client_id: instanceData.client_id,
+            client_secret: instanceData.client_secret,
           });
         } else {
-          return createMastodonApp(instance);
+          return createMastodonApp(instance, uriWithURLObject.hostname);
         }
       } else {
-        return createMastodonApp(instance);
+        return createMastodonApp(instance, uriWithURLObject.hostname);
       }
     })
     .then((client: { client_id: string; client_secret: string }) => {
-      const { client_id, client_secret } = client;
-      return authorize(instance, client_id, client_secret);
+      const { client_id } = client;
+      return { uri, clientId: client_id };
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(() => {
       return Promise.reject('Instance not found');
     });
-}
-
-function authorize(instance: Masto, clientId: string, clientSecret: string) {
-  return instance.get<any>(
-    '/oauth/authorize',
-    authorizeConfig(clientId, clientSecret),
-    {
-      maxRedirects: 0,
-    }
-  );
 }
