@@ -89,7 +89,7 @@ function fetchTwitterUserTimeline(
     data['max_id'] = maxId;
   }
 
-  if (typeof sinceId !== 'undefined') {
+  if (sinceId) {
     data['since_id'] = sinceId;
   }
 

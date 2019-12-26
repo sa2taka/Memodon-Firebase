@@ -29,20 +29,19 @@ export default function updateNote(
       const [twitterSecretsSnap, memosSnap] = resolved;
       const secretData = twitterSecretsSnap.data();
       const latestMemoDoc = memosSnap.docs[0];
-      let latestMemoId: string;
+      let latestMemoId: string | undefined;
 
       if (latestMemoDoc) {
         latestMemoId = latestMemoDoc.data().id.toString();
       } else {
-        latestMemoId = '0';
+        latestMemoId = undefined;
       }
 
-      if (!secretData || !latestMemoId) {
+      if (!secretData) {
         return;
       }
 
       const { token, secret } = secretData[userData.twitterId];
-
       return fetchTwitterMemo(userData.twitterId, token, secret, latestMemoId);
     })
     .then((noteWithoutUser: Array<any> | undefined) => {
