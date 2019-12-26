@@ -1,21 +1,21 @@
 <template>
   <div class="add-account-buttons my-4">
     <v-btn class="twitter-button">{{ $t('add-twitter') }}</v-btn>
-    <v-btn @click="openMastodonAuth" class="mastodon-button ml-4">{{
-      $t('add-mastodon')
-    }}</v-btn>
+    <v-btn @click="startMastodonAuth" class="mastodon-button ml-4">
+      {{ $t('add-mastodon') }}
+    </v-btn>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import { openAuthWithMastodonWindow } from '@/libs/mastodonUser';
+import { startAuthWithMastodonWindow } from '@/libs/mastodonUser';
 
 @Component
 export default class AddAccountButtons extends Vue {
-  public openMastodonAuth() {
-    openAuthWithMastodonWindow();
+  public startMastodonAuth() {
+    startAuthWithMastodonWindow();
   }
 }
 </script>

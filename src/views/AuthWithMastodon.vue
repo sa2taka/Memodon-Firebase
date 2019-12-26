@@ -40,6 +40,9 @@ export default class AuthWithMastodon extends Vue {
         const { uri, clientId } = result.data;
         this.isLoading = false;
 
+        //Use when obtaining an access token
+        sessionStorage.setItem('authMastodonUrl', uri);
+
         location.href = this.createAuthUrl(uri, clientId);
       })
       .catch(() => {
@@ -61,10 +64,11 @@ export default class AuthWithMastodon extends Vue {
   }
 
   private createAuthUrl(uri: string, clientId: string) {
-    const redirectUris = encodeURIComponent('urn:ietf:wg:oauth:2.0:oob');
+    const redirectPath = '/auth/mastodon/code';
+    const redirectUri = encodeURIComponent(new URL(document.URL).origin);
     const scope = 'read';
     const responseType = 'code';
-    const qs = `?response_type=${responseType}&redirect_uri=${redirectUris}&scope=${scope}&client_id=${clientId}`;
+    const qs = `?response_type=${responseType}&redirect_uri=${redirectUri}${redirectPath}&scope=${scope}&client_id=${clientId}`;
     const authPath = '/oauth/authorize';
 
     return uri + authPath + qs;

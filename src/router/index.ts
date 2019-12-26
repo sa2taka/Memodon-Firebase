@@ -6,6 +6,7 @@ import Top from '../views/Top.vue';
 import Note from '../views/NotePage.vue';
 import Settings from '../views/Settings.vue';
 import AuthWithMastodon from '../views/AuthWithMastodon.vue';
+import GetMastodonToken from '../views/GetMastodonToken.vue';
 
 Vue.use(VueRouter);
 
@@ -50,6 +51,12 @@ const routes = [
     path: '/auth/mastodon',
     name: 'authWithMastodon',
     component: AuthWithMastodon,
+    meta: { auth: true },
+  },
+  {
+    path: '/auth/mastodon/code',
+    name: 'getAccessToken',
+    component: GetMastodonToken,
     meta: { auth: true },
   },
 ];
