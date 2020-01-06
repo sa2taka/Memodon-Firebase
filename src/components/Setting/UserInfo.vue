@@ -7,11 +7,11 @@
     </v-col>
     <v-col cols="auto" class="account-info__username ml-2 mr-auto">
       <h3 v-html="user.displayName"></h3>
-      <div class="grey--text">@{{ user.userName }}</div>
+      <div class="grey--text">{{ provider }}@{{ user.userName }}</div>
     </v-col>
 
     <v-col class="account-info__gotoInfo ml-2" cols="auto">
-      <v-btn color="success" @click="openUserPage">
+      <v-btn :color="providerColor" @click="openUserPage">
         {{ $t('openInfo') }}
         <v-icon small>fa-arrow-right</v-icon>
       </v-btn>
@@ -40,6 +40,25 @@ export default class Users extends Vue {
       return `https://${this.user.provider}/@${this.user.userName}`;
     } else {
       return `https://twitter.com/${this.user.userName}`;
+    }
+  }
+
+  private get provider() {
+    if (this.user.provider) {
+      return this.user.provider;
+    } else {
+      return '';
+    }
+  }
+
+  private get providerColor() {
+    if (this.user.provider) {
+      if (this.user.provider === 'twitter.com') {
+        return '#1da1f2';
+      }
+      return 'secondary';
+    } else {
+      return '#1da1f2';
     }
   }
 }

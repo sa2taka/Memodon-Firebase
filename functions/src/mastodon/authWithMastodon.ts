@@ -131,9 +131,11 @@ function saveMastodonUser(
 ) {
   const data: any = {};
   data[credential.id] = {
-    username: credential.username,
-    display: credential.display_name,
+    uid: credential.id,
+    userName: credential.username,
+    displayName: credential.display_name,
     iconUrl: credential.avatar,
+    provider: hostname,
   };
   return firestore()
     .collection('users')
