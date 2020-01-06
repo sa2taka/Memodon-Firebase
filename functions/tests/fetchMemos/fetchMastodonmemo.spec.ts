@@ -1,14 +1,14 @@
 require('../config');
 
-import fetchTwittermemo from '../../src/fetchMemos/fetchTwitterMemo';
-import { id, token, secret } from '../../src/secrets/twitter';
+import fetchMastodonMemo from '../../src/fetchMemos/fetchMastodonMemo';
+import { id, token, uri } from '../../src/secrets/mastodon';
 
 const assert = require('chai').assert;
 
-describe.skip('fetchTwitterMemo(test time is too long)', function() {
+describe.skip('fetchMastodonMemo', function() {
   this.timeout(60000);
   it('should fetch Memo', () => {
-    return fetchTwittermemo(id, token, secret).then((forUser) => {
+    return fetchMastodonMemo(uri, id, token).then((forUser) => {
       assert.isNotNull(forUser);
 
       forUser.forEach((memo) => {
@@ -21,6 +21,7 @@ describe.skip('fetchTwitterMemo(test time is too long)', function() {
           'providerId',
           'createdAt',
           'updatedAt',
+          'visibility',
         ]);
         for (const key of Object.keys(memo)) {
           // @ts-ignore

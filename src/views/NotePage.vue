@@ -85,7 +85,7 @@ export default class NotePage extends Vue {
       .doc(uid)
       .collection('memos')
       .orderBy('timestamp', 'desc')
-      .limit(100);
+      .limit(40);
 
     if (this.end) {
       ref = ref.endBefore(this.end);

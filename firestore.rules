@@ -17,6 +17,10 @@ service cloud.firestore {
         allow read: if request.auth != null && (request.auth.uid == userID || request.parent().child('isPublic') == true);
         allow write: if request.auth.uid == userID;
       }
+
+      match /subusers/{providerId} {
+        allow read, write: if request.auth.uid == userID;
+      }
     }
 
     match /memos/{memoId} {
