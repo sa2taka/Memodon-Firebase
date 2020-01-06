@@ -5,7 +5,7 @@ import { id, token, uri } from '../../src/secrets/mastodon';
 
 const assert = require('chai').assert;
 
-describe('fetchMastodonMemo', function() {
+describe.skip('fetchMastodonMemo', function() {
   this.timeout(60000);
   it('should fetch Memo', () => {
     return fetchMastodonMemo(uri, id, token).then((forUser) => {
@@ -27,6 +27,10 @@ describe('fetchMastodonMemo', function() {
           // @ts-ignore
           assert.isNotNull(memo[key]);
         }
+
+        memo.entities.hashtags.forEach((tag: string) => {
+          assert.isString(tag);
+        });
       });
     });
   });

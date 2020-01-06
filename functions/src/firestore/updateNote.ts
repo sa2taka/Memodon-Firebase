@@ -2,7 +2,7 @@ import { firestore } from 'firebase-admin';
 
 import fetchTwitterMemo from '../fetchMemos/fetchTwitterMemo';
 import addTag from './addTag';
-import addMemos from './addMemos';
+import addMemos from './addMemo';
 import updateUserFetchedTime from './updateUserFetchedTime';
 
 export default function updateNote(

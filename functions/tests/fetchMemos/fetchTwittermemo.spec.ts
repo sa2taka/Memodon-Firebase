@@ -26,6 +26,10 @@ describe.skip('fetchTwitterMemo(test time is too long)', function() {
           // @ts-ignore
           assert.isNotNull(memo[key]);
         }
+
+        memo.entities.hashtags.forEach((tag: string) => {
+          assert.isString(tag);
+        });
       });
     });
   });

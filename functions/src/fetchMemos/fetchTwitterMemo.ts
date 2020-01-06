@@ -16,13 +16,15 @@ export default function fetchTwitterMemo(
   return crawlAndFilterTimeline(twitterId, token, secret, sinceId).then(
     (timeline) => {
       const newNoteForUser = timeline.map((value) => {
+        const entities = value.entities;
+        entities.hashtags = entities.hashtags.map((tagElm: any) => tagElm.text);
         return {
           id: value.id,
           timestamp: firestore.Timestamp.fromMillis(
             moment(value.created_at, 'ddd MMM DD HH:mm:ss ZZ YYYY').format('x')
           ),
           text: value.text,
-          entities: value.entities,
+          entities,
           provider: 'twitter.com',
           providerId: twitterId,
           createdAt: firestore.FieldValue.serverTimestamp(),

@@ -3,6 +3,9 @@ import { firestore } from 'firebase-admin';
 
 import masto from '../mastodon/masto';
 import { createMastodonApp } from '../mastodon/mastodonAppCreator';
+import fetchMastodonMemo from '../fetchMemos/fetchMastodonMemo';
+import addTag from '../firestore/addTag';
+import addMemo from '../firestore/addMemo';
 
 export function getClientInfo(originUri: string) {
   const uriWithURLObject = new URL(originUri);
@@ -94,6 +97,7 @@ export function getMastodonToken(
       return Promise.all([
         saveAccessToken(uid, hostname, accessToken, res.id),
         saveMastodonUser(uid, hostname, res),
+        saveMastodonMemo(uid, res.id, uri, accessToken),
       ]);
     })
     .catch((err) => {
@@ -137,4 +141,15 @@ function saveMastodonUser(
     .collection('subusers')
     .doc(hostname)
     .set(data);
+}
+
+function saveMastodonMemo(
+  uid: string,
+  id: string,
+  uri: string,
+  accessToken: string
+) {
+  return fetchMastodonMemo(uri, id, accessToken).then((memos) => {
+    return Promise.all([addMemo(memos, uid), addTag(memos, uid)]);
+  });
 }

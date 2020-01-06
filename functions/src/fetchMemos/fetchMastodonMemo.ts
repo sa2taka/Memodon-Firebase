@@ -21,7 +21,7 @@ export default function fetchTwitterMemo(
               const text = value.spoiler_text + value.content;
               const entities = {
                 media: value.media_attachments,
-                tags: value.tags,
+                hashtags: value.tags.map((tagElm: any) => tagElm.name),
               };
               return {
                 id: value.id,
