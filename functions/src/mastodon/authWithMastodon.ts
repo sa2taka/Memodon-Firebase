@@ -1,4 +1,4 @@
-import Masto from 'masto';
+import Masto, { AccountCredentials } from 'masto';
 import { firestore } from 'firebase-admin';
 
 import masto from '../mastodon/masto';
@@ -51,6 +51,7 @@ export function getMastodonToken(
 ) {
   let instance!: Masto;
   const hostname = new URL(uri).hostname;
+  let accessToken = '';
 
   return masto({ uri })
     .then((i: Masto) => {
@@ -81,19 +82,59 @@ export function getMastodonToken(
       });
     })
     .then((res) => {
-      const access_token = res.access_token;
+      accessToken = res.access_token;
 
-      return firestore()
-        .collection('users')
-        .doc(uid)
-        .collection('secrets')
-        .doc(hostname)
-        .set({
-          access_token,
-        });
+      return masto({ uri, accessToken });
+    })
+    .then((i) => {
+      instance = i;
+      return instance.verifyCredentials();
+    })
+    .then((res) => {
+      return Promise.all([
+        saveAccessToken(uid, hostname, accessToken, res.id),
+        saveMastodonUser(uid, hostname, res),
+      ]);
     })
     .catch((err) => {
       console.error(err);
       return Promise.reject('Something error occured');
     });
+}
+
+function saveAccessToken(
+  uid: string,
+  hostname: string,
+  token: string,
+  id: string
+) {
+  const data: any = {};
+  data[id] = {
+    accessToken: token,
+  };
+  return firestore()
+    .collection('users')
+    .doc(uid)
+    .collection('secrets')
+    .doc(hostname)
+    .set(data);
+}
+
+function saveMastodonUser(
+  uid: string,
+  hostname: string,
+  credential: AccountCredentials
+) {
+  const data: any = {};
+  data[credential.id] = {
+    username: credential.username,
+    display: credential.display_name,
+    iconUrl: credential.avatar,
+  };
+  return firestore()
+    .collection('users')
+    .doc(uid)
+    .collection('subusers')
+    .doc(hostname)
+    .set(data);
 }
