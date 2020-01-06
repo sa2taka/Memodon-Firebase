@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "memodon-js"
+    "default": "memodon-js",
+    "develop": "memodon-dev"
   }
 }

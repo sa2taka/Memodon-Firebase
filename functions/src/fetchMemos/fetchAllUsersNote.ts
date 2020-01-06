@@ -5,14 +5,14 @@ import updateNote from '../firestore/updateNote';
 export function fetchAllUsersNote(userSnapshot: firestore.DocumentSnapshot) {
   if (isAfter15Minues(userSnapshot)) {
     return Promise.resolve(
-      '{"error": "15 minutes have not passed since the last fetching"'
+      '{"error": "15 minutes have not passed since the last fetching"}'
     );
   }
   // const subUserCollecgion = snapshot.ref.collection('subUsers');
   const promises = [updateNote(userSnapshot)];
 
   return Promise.all(promises).then(() => {
-    return Promise.resolve('{"success": "success"');
+    return Promise.resolve('{"success": "success"}');
   });
 }
 

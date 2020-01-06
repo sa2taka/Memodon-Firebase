@@ -62,13 +62,9 @@ function writeTag(ref: firestore.DocumentReference, tag: any) {
 function extractTags(note: Array<any>): Array<string> {
   return uniq(
     flatMap(note, (memo: any) => {
-      return memo.entities.hashtags
-        .map((tag: any) => {
-          return tag.text;
-        })
-        .filter((tag: string) => {
-          return tag !== 'メモ' && tag.toLowerCase() !== 'memo';
-        });
+      return memo.entities.hashtags.filter((tag: string) => {
+        return tag !== 'メモ' && tag.toLowerCase() !== 'memo';
+      });
     })
   );
 }

@@ -22,6 +22,7 @@ export const onCreate = functions
     const user = snap.data();
 
     if (typeof user === 'undefined') {
+      console.error('undefine user');
       return;
     }
 

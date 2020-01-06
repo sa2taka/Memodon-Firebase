@@ -47,10 +47,14 @@ export default class fetchMemoButton extends Vue {
     this.isLoading = true;
     this.disable = false;
 
-    fetchMemo().then((result) => {
-      this.isLoading = false;
-      this.updateDisableStatus();
-    });
+    fetchMemo()
+      .then((result) => {
+        this.isLoading = false;
+        this.updateDisableStatus();
+      })
+      .catch(() => {
+        this.isLoading = false;
+      });
   }
 
   private subscribeUserAndUpdateDisable() {

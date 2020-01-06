@@ -4,7 +4,7 @@
     <v-list-item>
       <template v-slot:default="{ active, toggle }">
         <v-list-item-content>
-          <v-list-item-title>Dark Mode</v-list-item-title>
+          <v-list-item-title>{{ $t('mode') }}</v-list-item-title>
         </v-list-item-content>
 
         <v-list-item-action>
@@ -15,7 +15,7 @@
 
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title>Locale</v-list-item-title>
+        <v-list-item-title>{{ $t('locale') }}</v-list-item-title>
       </v-list-item-content>
 
       <v-list-item-action>
@@ -62,3 +62,16 @@ export default class CommonSettings extends Vue {
 </script>
 
 <style lang="scss" scoped></style>
+
+<i18n>
+{
+  "us": {
+    "mode": "Dark Mode",
+    "locale": "Locale"
+  },
+  "jp": {
+    "mode": "ダークモード",
+    "locale": "言語"
+  }
+}
+</i18n>
