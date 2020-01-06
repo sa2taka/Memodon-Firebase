@@ -1,11 +1,18 @@
 import firebase from '@/firebase';
 
-export interface TwitterMemo extends Memo {
+export type Memo = TwitterMemo | MastodonMemo;
+
+export interface TwitterMemo extends MemoBase {
   entities: TwitterEntities;
   extendedEntities: TwitterExtendedEntities;
 }
 
-export interface Memo {
+export interface MastodonMemo extends MemoBase {
+  entities: MastodonEntities;
+  visibility: string;
+}
+
+export interface MemoBase {
   id: number | string;
   provider: string;
   providerId: number | string;
@@ -18,7 +25,7 @@ export interface Memo {
 }
 
 interface TwitterEntities {
-  hashtags: TwitterHashTag[];
+  hashtags: string[];
   media?: TwitterMedia;
   urls: TwitterURL[];
   user_mentions: TwitterUserMention[];
@@ -29,8 +36,9 @@ interface TwitterExtendedEntities {
   media: TwitterMedia[];
 }
 
-interface TwitterHashTag extends TwitterEntityBase {
-  text: string;
+interface MastodonEntities {
+  hashtags: string[];
+  media: MastodonMedia[];
 }
 
 interface TwitterSymbol extends TwitterEntityBase {
@@ -88,4 +96,56 @@ interface TwitterVariants {
   bitrate: number;
   content_type: string;
   url: string;
+}
+
+interface MastodonMedia {
+  id: string;
+  type: 'unknown' | 'image' | 'gifv' | 'video' | 'audio';
+  url: string;
+  preview_url: string;
+  remote_url: string | null;
+  text_url: string;
+  meta: MastodonImageMetaData | MastodonVideoMetaData;
+  description: string;
+  blurhash: string;
+}
+
+interface MastodonImageMetaData extends MastodonMediaMetaDataBase {
+  focus: {
+    x: number;
+    y: number;
+  };
+}
+
+interface MastodonVideoMetaData
+  extends MastodonGifvMetaData,
+    MastodonAudioMetaData {}
+
+interface MastodonGifvMetaData
+  extends MastodonMediaMetaDataBase,
+    MastodonMediaSize {
+  length: string;
+  duration: number;
+  fps: number;
+}
+
+interface MastodonAudioMetaData extends MastodonMediaMetaDataBase {
+  length: string;
+  duration: number;
+  audio_encode: string;
+  audio_bitrate: string;
+  audio_channels: string;
+}
+
+interface MastodonMediaMetaDataBase {
+  original: MastodonMediaSize;
+  small: MastodonMediaSize;
+}
+
+interface MastodonMediaSize {
+  width: number;
+  height: number;
+  size: string;
+  aspect: number;
+  frame_rate?: string;
 }

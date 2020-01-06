@@ -2,13 +2,13 @@
   <v-col>
     <user :userRef="memo.user"></user>
     <v-divider class="mt-2"></v-divider>
-    <p class="mx-3 mt-2 memo-content" v-html="html(memo.text)"></p>
+    <p class="mx-3 mt-2 memo-content" v-html="memo.text"></p>
   </v-col>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { TwitterMemo as ITwitterMemo } from '@/types/memo';
+import { MastodonMemo as IMastodonMemo } from '@/types/memo';
 
 import User from '@/components/Note/Memo/User.vue';
 
@@ -17,19 +17,10 @@ import User from '@/components/Note/Memo/User.vue';
 })
 export default class TwitterMemo extends Vue {
   @Prop({ required: true })
-  public memo!: ITwitterMemo;
+  public memo!: IMastodonMemo;
 
   private html(text: string) {
     let html = text;
-
-    this.memo.entities.urls.forEach((url) => {
-      html = html.replace(
-        url.url,
-        `<a href="${this.escapeHtml(
-          url.url
-        )}" target="_blank">${this.escapeHtml(url.display_url)}</a>`
-      );
-    });
 
     this.memo.entities.hashtags.forEach((tag) => {
       if (tag === 'メモ' || tag.toLowerCase() === 'memo') {
@@ -39,17 +30,6 @@ export default class TwitterMemo extends Vue {
     });
 
     return html;
-  }
-
-  private escapeHtml(str: string) {
-    let escaped = str;
-    escaped = escaped.replace(/&/g, '&amp;');
-    escaped = escaped.replace(/>/g, '&gt;');
-    escaped = escaped.replace(/</g, '&lt;');
-    escaped = escaped.replace(/"/g, '&quot;');
-    escaped = escaped.replace(/'/g, '&#x27;');
-    escaped = escaped.replace(/`/g, '&#x60;');
-    return escaped;
   }
 
   private generateTagLink(tag: string) {

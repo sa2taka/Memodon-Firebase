@@ -85,7 +85,7 @@ export default class NotePage extends Vue {
       .doc(uid)
       .collection('memos')
       .orderBy('timestamp', 'desc')
-      .limit(40);
+      .limit(100);
 
     if (this.end) {
       ref = ref.endBefore(this.end);
@@ -118,7 +118,7 @@ export default class NotePage extends Vue {
       return this.note.filter((memo) => {
         return queries.some((q) => {
           if (q) {
-            return memo.text.includes(q);
+            return memo.entities.hashtags.includes(q);
           } else {
             return false;
           }
