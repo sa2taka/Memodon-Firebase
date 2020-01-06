@@ -11,7 +11,9 @@ import { getAccessToken } from '@/libs/mastodonUser';
 @Component
 export default class GetMastodonToken extends Vue {
   public created() {
-    getAccessToken(this.code);
+    getAccessToken(this.code).then(() => {
+      close();
+    });
   }
 
   private get code(): string {
@@ -36,10 +38,10 @@ export default class GetMastodonToken extends Vue {
 <i18n>
 {
 "jp": {
-  "confirmAuthorizeInfo": "認可情報を確認中です"
+  "confirmAuthorizeInfo": "認可情報確認・タグ取得中...(この作業は時間がかかる場合があります)"
 },
 "en": {
-  "confirmAuthorizeInfo": "Confirming Authorize Information"
+  "confirmAuthorizeInfo": "Confirming authorize information, Fetching tags...(This process can take serveral minutes)"
 }
 }
 </i18n>
