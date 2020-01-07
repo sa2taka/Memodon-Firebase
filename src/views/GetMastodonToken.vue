@@ -11,9 +11,13 @@ import { getAccessToken } from '@/libs/mastodonUser';
 @Component
 export default class GetMastodonToken extends Vue {
   public created() {
-    getAccessToken(this.code).then(() => {
-      close();
-    });
+    getAccessToken(this.code)
+      .then(() => {
+        close();
+      })
+      .catch(() => {
+        close();
+      });
   }
 
   private get code(): string {

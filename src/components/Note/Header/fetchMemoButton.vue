@@ -45,7 +45,7 @@ export default class fetchMemoButton extends Vue {
   public callToFetchMemo() {
     const fetchMemo = firebase.functions().httpsCallable('fetchMemo');
     this.isLoading = true;
-    this.disable = false;
+    this.disable = true;
 
     fetchMemo()
       .then((result) => {
@@ -54,6 +54,7 @@ export default class fetchMemoButton extends Vue {
       })
       .catch(() => {
         this.isLoading = false;
+        this.updateDisableStatus();
       });
   }
 
@@ -65,12 +66,16 @@ export default class fetchMemoButton extends Vue {
         .collection('users')
         .doc(uid)
         .onSnapshot((user) => {
-          const data = user.data();
+          try {
+            const data = user.data();
 
-          if (data) {
-            const lastFetchDay: Date = data.lastFetched.toDate();
-            this.fifteenMinutesAfterlastFetchDay =
-              lastFetchDay.getTime() + 15 * 60 * 1000;
+            if (data) {
+              const lastFetchDay: Date = data.lastFetched.toDate();
+              this.fifteenMinutesAfterlastFetchDay =
+                lastFetchDay.getTime() + 15 * 60 * 1000;
+              this.updateDisableStatus();
+            }
+          } catch {
             this.updateDisableStatus();
           }
         });
@@ -88,7 +93,7 @@ export default class fetchMemoButton extends Vue {
   }
 
   private startDisableUpdateCycle() {
-    setInterval(this.updateDisableStatus, 3 * 60 * 1000);
+    setInterval(this.updateDisableStatus, 15 * 60 * 1000);
   }
 
   private updateDisableStatus() {

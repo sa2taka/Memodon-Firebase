@@ -1,6 +1,7 @@
 import firebase from '@/firebase';
 import router from '@/router/index';
 import User from '@/store/modules/user';
+import { generateUUID } from './util';
 
 const provider = new firebase.auth.TwitterAuthProvider();
 
@@ -51,8 +52,9 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
     userInfo.providerData[0]
   ) {
     const userData: any = {
+      provider: 'twitter.com',
       // @ts-ignore `because user.user.providerData[0].uid` is not null, but Lint tell "Object is possibly 'null'".
-      twitterId: userInfo.providerData[0].uid,
+      providerId: userInfo.providerData[0].uid,
       userName: user.additionalUserInfo.username,
       displayName: userInfo.displayName,
       iconUrl: userInfo.photoURL,
@@ -63,8 +65,7 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
       userData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
     }
 
-    let secretData: Record<string, any> = {};
-    secretData[userData.twitterId] = {
+    const secretData = {
       token: (user.credential as firebase.auth.OAuthCredential).accessToken,
       secret: (user.credential as firebase.auth.OAuthCredential).secret,
     };
@@ -74,13 +75,13 @@ const createUserIntoCloud = (user: firebase.auth.UserCredential) => {
       .collection('users')
       .doc(userInfo.uid)
       .set(userData, { merge: true })
-      .then(() => {
+      .then(async () => {
         return firebase
           .firestore()
           .collection('users')
           .doc(userInfo.uid)
           .collection('secrets')
-          .doc('twitter.com')
+          .doc(await generateUUID('twitter.com' + userData.providerId))
           .set(secretData, { merge: true });
       });
   } else {

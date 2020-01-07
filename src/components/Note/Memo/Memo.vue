@@ -4,6 +4,7 @@
       :memo="memo"
       v-if="memo.provider === 'twitter.com'"
     ></twitter-memo>
+    <mastodon-memo :memo="memo" v-else></mastodon-memo>
   </v-card>
 </template>
 
@@ -11,12 +12,13 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import TwitterMemo from '@/components/Note/Memo/TwitterMemo.vue';
+import MastodonMemo from '@/components/Note/Memo/MastodonMemo.vue';
 import { Memo as IMemo } from '@/types/memo';
 
 import MemoSearchQuery from '@/store/modules/memoSearchQuery';
 
 @Component({
-  components: { TwitterMemo },
+  components: { TwitterMemo, MastodonMemo },
 })
 export default class Memo extends Vue {
   @Prop({ required: true })

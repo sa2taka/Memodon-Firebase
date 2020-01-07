@@ -1,11 +1,15 @@
-import Masto, { AccountCredentials } from 'masto';
+import Masto from 'masto';
 import { firestore } from 'firebase-admin';
 
 import masto from '../mastodon/masto';
 import { createMastodonApp } from '../mastodon/mastodonAppCreator';
-import fetchMastodonMemo from '../fetchMemos/fetchMastodonMemo';
-import addTag from '../firestore/addTag';
-import addMemo from '../firestore/addMemo';
+
+import {
+  saveAccessToken,
+  saveMastodonUser,
+  saveMastodonMemo,
+} from '../firestore/saveMastodonInfo';
+import { generateUUID } from '../util';
 
 export function getClientInfo(originUri: string) {
   const uriWithURLObject = new URL(originUri);
@@ -55,6 +59,7 @@ export function getMastodonToken(
   let instance!: Masto;
   const hostname = new URL(uri).hostname;
   let accessToken = '';
+  let subuserId = '';
 
   return masto({ uri })
     .then((i: Masto) => {
@@ -94,64 +99,31 @@ export function getMastodonToken(
       return instance.verifyCredentials();
     })
     .then((res) => {
+      subuserId = generateUUID(hostname + res.id);
       return Promise.all([
         saveAccessToken(uid, hostname, accessToken, res.id),
-        saveMastodonUser(uid, hostname, res),
-        saveMastodonMemo(uid, res.id, uri, accessToken),
+        saveMastodonUser(uid, hostname, uri, res),
       ]);
+    })
+    .then((_) => {
+      return Promise.all([
+        firestore()
+          .collection('users')
+          .doc(uid)
+          .get(),
+        firestore()
+          .collection('users')
+          .doc(uid)
+          .collection('subusers')
+          .doc(subuserId)
+          .get(),
+      ]);
+    })
+    .then((resolved) => {
+      return saveMastodonMemo(...resolved);
     })
     .catch((err) => {
       console.error(err);
       return Promise.reject('Something error occured');
     });
-}
-
-function saveAccessToken(
-  uid: string,
-  hostname: string,
-  token: string,
-  id: string
-) {
-  const data: any = {};
-  data[id] = {
-    accessToken: token,
-  };
-  return firestore()
-    .collection('users')
-    .doc(uid)
-    .collection('secrets')
-    .doc(hostname)
-    .set(data);
-}
-
-function saveMastodonUser(
-  uid: string,
-  hostname: string,
-  credential: AccountCredentials
-) {
-  const data: any = {};
-  data[credential.id] = {
-    uid: credential.id,
-    userName: credential.username,
-    displayName: credential.display_name,
-    iconUrl: credential.avatar,
-    provider: hostname,
-  };
-  return firestore()
-    .collection('users')
-    .doc(uid)
-    .collection('subusers')
-    .doc(hostname)
-    .set(data);
-}
-
-function saveMastodonMemo(
-  uid: string,
-  id: string,
-  uri: string,
-  accessToken: string
-) {
-  return fetchMastodonMemo(uri, id, accessToken).then((memos) => {
-    return Promise.all([addMemo(memos, uid), addTag(memos, uid)]);
-  });
 }

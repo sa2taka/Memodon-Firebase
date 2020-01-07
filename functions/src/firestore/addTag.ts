@@ -1,6 +1,6 @@
 import { firestore } from 'firebase-admin';
+import { generateUUID } from '../util';
 const flatMap = require('array.prototype.flatmap');
-const crypto = require('crypto');
 
 export default async function addTag(note: Array<any>, userId: string) {
   const tags = extractTags(note);
@@ -40,13 +40,6 @@ function addTagIntoRoot(tags: Array<any>) {
       return writeTag(ref, tag);
     })
   );
-}
-
-function generateUUID(tag: string) {
-  return crypto
-    .createHash('sha256')
-    .update(tag, 'utf8')
-    .digest('hex');
 }
 
 function writeTag(ref: firestore.DocumentReference, tag: any) {

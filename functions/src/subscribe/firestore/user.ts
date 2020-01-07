@@ -3,7 +3,8 @@ import { firestore } from 'firebase-admin';
 
 import { consumerKey, consumerSecret } from '../../secrets/twitter';
 
-import updateNote from '../../firestore/updateNote';
+import { updateMainUserNote } from '../../firestore/updateNote';
+import updateUserFetchedTime from '../../firestore/updateUserFetchedTime';
 
 const rp = require('request-promise');
 const functions = require('firebase-functions');
@@ -27,10 +28,11 @@ export const onCreate = functions
     }
 
     return Promise.all([
-      isPublic(user.twitterId).then((ans) => {
+      isPublic(user.providerId).then((ans) => {
         return snap.ref.set({ isPublic: ans }, { merge: true });
       }),
-      updateNote(snap),
+      updateMainUserNote(snap),
+      updateUserFetchedTime(snap.id),
     ]);
   });
 

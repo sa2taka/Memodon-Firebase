@@ -77,9 +77,7 @@ export default class Users extends Vue {
         this.subUsers = [];
         snapshots.forEach((snapshot) => {
           const data = snapshot.data();
-          for (const user of Object.values(data)) {
-            this.subUsers.push(user as GeneralUser);
-          }
+          this.subUsers.push(data as GeneralUser);
         });
       });
   }

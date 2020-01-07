@@ -1,4 +1,5 @@
 import { firestore } from 'firebase-admin';
+import { generateUUID } from '../util';
 const crypto = require('crypto');
 
 export default function addMemos(note: Array<any>, userId: string) {
@@ -31,10 +32,7 @@ function addNoteIntoMemoCollection(newNote: Array<any>) {
   return Promise.all(
     newNote.map((memo) => {
       const uidStr = memo.provider + memo.id;
-      const uid = crypto
-        .createHash('sha256')
-        .update(uidStr, 'utf8')
-        .digest('hex');
+      const uid = generateUUID(uidStr);
       const ref = firestore()
         .collection('memos')
         .doc(uid);
