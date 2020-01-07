@@ -51,9 +51,10 @@ export default class NotePage extends Vue {
   private subscribeQuery() {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type.startsWith('memoSearchQuery')) {
-        this.filtered = this.filterNote(
-          SearchQuery.words,
-          SearchQuery.inputingWord
+        this.filterNote(SearchQuery.words, SearchQuery.inputingWord).then(
+          (filtered) => {
+            this.filtered = filtered;
+          }
         );
       }
     });
@@ -85,7 +86,7 @@ export default class NotePage extends Vue {
       .doc(uid)
       .collection('memos')
       .orderBy('timestamp', 'desc')
-      .limit(100);
+      .limit(40);
 
     if (this.end) {
       ref = ref.endBefore(this.end);
@@ -104,29 +105,35 @@ export default class NotePage extends Vue {
     });
   }
 
-  private filterNote(words?: (string | null)[], inputingWord?: string): Memo[] {
-    const queries: (string | null)[] = [];
-    if (words) {
-      queries.push(...this.removeEmpty(words));
-    }
+  private filterNote(
+    words?: (string | null)[],
+    inputingWord?: string
+  ): Promise<Memo[]> {
+    return new Promise((resolve, reject) => {
+      const queries: (string | null)[] = [];
+      if (words) {
+        queries.push(...this.removeEmpty(words));
+      }
 
-    if (inputingWord && this.isEmptyOrOnlySpace(inputingWord)) {
-      queries.push(inputingWord);
-    }
+      if (inputingWord && this.isEmptyOrOnlySpace(inputingWord)) {
+        queries.push(inputingWord);
+      }
 
-    if (queries.length !== 0) {
-      return this.note.filter((memo) => {
-        return queries.some((q) => {
-          if (q) {
-            return memo.entities.hashtags.includes(q);
-          } else {
-            return false;
-          }
+      if (queries.length !== 0) {
+        const filtered = this.note.filter((memo) => {
+          return queries.some((q) => {
+            if (q) {
+              return memo.text.includes(q);
+            } else {
+              return false;
+            }
+          });
         });
-      });
-    } else {
-      return this.note;
-    }
+        return resolve(filtered);
+      } else {
+        return resolve(this.note);
+      }
+    });
   }
 
   private removeEmpty(ary: (string | null)[]) {

@@ -18,23 +18,6 @@ import User from '@/components/Note/Memo/User.vue';
 export default class TwitterMemo extends Vue {
   @Prop({ required: true })
   public memo!: IMastodonMemo;
-
-  private html(text: string) {
-    let html = text;
-
-    this.memo.entities.hashtags.forEach((tag) => {
-      if (tag === 'メモ' || tag.toLowerCase() === 'memo') {
-        return;
-      }
-      html = html.replace(`#${tag}`, this.generateTagLink(tag));
-    });
-
-    return html;
-  }
-
-  private generateTagLink(tag: string) {
-    return `<a class="memo-tag">#${tag}</a>`;
-  }
 }
 </script>
 

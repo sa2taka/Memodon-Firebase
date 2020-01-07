@@ -18,7 +18,7 @@ export default function fetchTwitterMemo(
         return crawlAndFilterTimeline(instance, tag, providerId, sinceId).then(
           (timeline) => {
             return timeline.map((value) => {
-              const text = value.spoiler_text + value.content;
+              const text = replaceTag(value.spoiler_text + value.content);
               const entities = {
                 media: value.media_attachments,
                 hashtags: value.tags.map((tagElm: any) => tagElm.name),
@@ -107,6 +107,16 @@ function fetchTagTimeline(
   params?: FetchTimelineParams
 ) {
   return instance.get<Status[]>(`/api/v1/timelines/tag/${id}`, params);
+}
+
+function replaceTag(text: string) {
+  return text
+    .replace(/<a[^>]*?>#<span>(メモ|[mM][eE][mM][oO])<\/span><\/a>/g, '#$1')
+    .replace(/<a[^>]*?>#<span>([^>]+?)<\/span><\/a>/g, generateTagLink('$1'));
+}
+
+function generateTagLink(tag: string) {
+  return `<a class="memo-tag">#${tag}</a>`;
 }
 
 const sleep = async (t: number) => {
