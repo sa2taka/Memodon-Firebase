@@ -5,7 +5,7 @@ import 'firebase/firestore';
 import 'firebase/functions';
 
 let firebaseConfig: any;
-if (process.env.ENV == 'prod') {
+if (process.env.VUE_APP_ENV == 'prod') {
   // 本番環境の設定値
   firebaseConfig = {
     apiKey: 'AIzaSyA6jD4e0Ghm1JtDvtmO5PSNnnDCrqPs0m8',

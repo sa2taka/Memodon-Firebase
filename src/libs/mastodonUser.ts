@@ -21,9 +21,7 @@ export function getAccessToken(code: string) {
     .functions()
     .httpsCallable('getMastodonToken');
 
-  return getMastodonToken({ code, uri, redirectUri }).then((result) => {
-    console.log(result);
-  });
+  return getMastodonToken({ code, uri, redirectUri });
 }
 
 function createRedirectUri() {
