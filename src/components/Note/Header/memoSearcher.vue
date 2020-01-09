@@ -97,10 +97,7 @@ export default class memoSearcher extends Vue {
   }
 
   private splitSearchWord() {
-    // なぜかsearchがnullになるため三項演算子を利用する
-    const formatedStr = this.search
-      ? this.search.replace(/^\s+/g, '').replace(/\s+$/g, '')
-      : '';
+    const formatedStr = this.search.replace(/^\s+/g, '').replace(/\s+$/g, '');
     if (formatedStr !== '') {
       this.searchWords.push(formatedStr);
       this.search = '';

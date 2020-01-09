@@ -18,12 +18,12 @@ import firebase from '@/firebase';
 @Component({})
 export default class User extends Vue {
   @Prop({ required: true })
-  public userRef!: firebase.firestore.DocumentReference | any;
+  public userRef!: firebase.firestore.DocumentReference;
 
   private user: any = null;
 
   public created() {
-    this.userRef.onSnapshot((snap: any) => {
+    this.userRef.onSnapshot((snap) => {
       this.user = snap.data();
     });
   }

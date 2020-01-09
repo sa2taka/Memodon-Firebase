@@ -24,7 +24,6 @@ export default class NotePage extends Vue {
   private filtered: Array<Memo> = [];
   private end?: firebase.firestore.Timestamp;
   private currentUserUID: string = '';
-  private limit = 40;
 
   private tagsRef: firebase.firestore.CollectionReference | null = null;
   private userRef: firebase.firestore.DocumentReference | null = null;
@@ -36,11 +35,7 @@ export default class NotePage extends Vue {
   }
 
   private fetchNote() {
-    if (this.queries.length === 0) {
-      this.fetchUserIdAndRun(this.fetchUsersNote);
-    } else {
-      this.fetchUsersNoteWithQuery(this.queries);
-    }
+    this.fetchUserIdAndRun(this.fetchUsersNote);
   }
 
   private updateRef() {
@@ -56,8 +51,11 @@ export default class NotePage extends Vue {
   private subscribeQuery() {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type.startsWith('memoSearchQuery')) {
-        this.end = undefined;
-        this.fetchNote();
+        this.filterNote(SearchQuery.words, SearchQuery.inputingWord).then(
+          (filtered) => {
+            this.filtered = filtered;
+          }
+        );
       }
     });
   }
@@ -81,20 +79,6 @@ export default class NotePage extends Vue {
     }
   }
 
-  private fetchUsersNoteWithQuery(queries: string[]) {
-    const searchFullText = firebase.functions().httpsCallable('searchFullText');
-
-    searchFullText({
-      queries,
-      limit: this.limit,
-      end: this.end,
-    }).then((res) => {
-      if (res.data.result === 'success') {
-        this.filtered = res.data.data.memos;
-      }
-    });
-  }
-
   private fetchUsersNote(uid: string) {
     let ref = firebase
       .firestore()
@@ -102,11 +86,13 @@ export default class NotePage extends Vue {
       .doc(uid)
       .collection('memos')
       .orderBy('timestamp', 'desc')
-      .limit(this.limit);
+      .limit(40);
+
     if (this.end) {
       ref = ref.endBefore(this.end);
     }
-    ref.get().then((snapshots) => {
+
+    ref.onSnapshot((snapshots) => {
       if (snapshots.empty) {
         return;
       }
@@ -119,29 +105,45 @@ export default class NotePage extends Vue {
     });
   }
 
-  private removeEmpty(ary: string[]) {
-    return ary.filter((str) => {
+  private filterNote(
+    words?: (string | null)[],
+    inputingWord?: string
+  ): Promise<Memo[]> {
+    return new Promise((resolve, reject) => {
+      const queries: (string | null)[] = [];
+      if (words) {
+        queries.push(...this.removeEmpty(words));
+      }
+
+      if (inputingWord && this.isEmptyOrOnlySpace(inputingWord)) {
+        queries.push(inputingWord);
+      }
+
+      if (queries.length !== 0) {
+        const filtered = this.note.filter((memo) => {
+          return queries.some((q) => {
+            if (q) {
+              return memo.text.includes(q);
+            } else {
+              return false;
+            }
+          });
+        });
+        return resolve(filtered);
+      } else {
+        return resolve(this.note);
+      }
+    });
+  }
+
+  private removeEmpty(ary: (string | null)[]) {
+    return ary.filter((str: string | null) => {
       return str && this.isEmptyOrOnlySpace(str);
     });
   }
 
   private isEmptyOrOnlySpace(str: string) {
-    return str.replace(/^\s+/g, '').replace(/\s+$/g, '') === '';
-  }
-
-  private get queries() {
-    const queries: string[] = [];
-    if (SearchQuery.words) {
-      queries.push(...this.removeEmpty(SearchQuery.words));
-    }
-
-    if (
-      SearchQuery.inputingWord &&
-      !this.isEmptyOrOnlySpace(SearchQuery.inputingWord)
-    ) {
-      queries.push(SearchQuery.inputingWord);
-    }
-    return queries;
+    return str.replace(/^\s+/g, '').replace(/\s+$/g, '') !== '';
   }
 }
 </script>
