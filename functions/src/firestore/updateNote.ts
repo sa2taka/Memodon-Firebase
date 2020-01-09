@@ -13,15 +13,26 @@ export function updateNote(userSnapshot: firestore.DocumentSnapshot) {
       '{"error": "15 minutes have not passed since the last fetching"}'
     );
   }
-  // const subUserCollecgion = snapshot.ref.collection('subUsers');
+  const subUserCollection = userSnapshot.ref.collection('subusers').get();
   const promises = [
     updateMainUserNote(userSnapshot),
     updateUserFetchedTime(userSnapshot.id),
   ];
 
-  return Promise.all(promises).then(() => {
-    return Promise.resolve('{"success": "success"}');
-  });
+  return subUserCollection
+    .then((subUsers) => {
+      promises.concat(
+        subUsers.docs.map((subUser) => {
+          return updateSubUserNote(userSnapshot, subUser);
+        })
+      );
+    })
+    .then(() => {
+      return Promise.all(promises);
+    })
+    .then(() => {
+      return Promise.resolve('{"success": "success"}');
+    });
 }
 
 export function updateNoteFromId(uuid: string) {
