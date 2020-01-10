@@ -79,8 +79,16 @@ export default class memoSearcher extends Vue {
     if (Query.words !== this.searchWords) {
       Query.setWords(this.searchWords);
     }
-    if (Query.inputingWord !== this.search) {
-      Query.setInputingWord(this.search);
+    // なぜかsearchがnullになるため三項演算子を利用する
+    const formatedSearching = this.search
+      ? this.search.replace(/^\s+/g, '').replace(/\s+$/g, '')
+      : '';
+    if (
+      (Query.inputingWord !== formatedSearching &&
+        formatedSearching.length >= 2) ||
+      formatedSearching.length == 0
+    ) {
+      Query.setInputingWord(formatedSearching);
     }
   }
 
@@ -97,8 +105,11 @@ export default class memoSearcher extends Vue {
   }
 
   private splitSearchWord() {
-    const formatedStr = this.search.replace(/^\s+/g, '').replace(/\s+$/g, '');
-    if (formatedStr !== '') {
+    // なぜかsearchがnullになるため三項演算子を利用する
+    const formatedStr = this.search
+      ? this.search.replace(/^\s+/g, '').replace(/\s+$/g, '')
+      : '';
+    if (formatedStr !== '' && formatedStr.length >= 2) {
       this.searchWords.push(formatedStr);
       this.search = '';
     }

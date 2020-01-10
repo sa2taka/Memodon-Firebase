@@ -15,6 +15,7 @@ import firebase from '@/firebase';
 import { Memo } from '@/types/memo';
 import User, { UserState } from '@/store/modules/user';
 import SearchQuery from '@/store/modules/memoSearchQuery';
+import MemoSearcher from '@/libs/memoSearcher';
 
 @Component({
   components: { Note, NoteHeader },
@@ -24,6 +25,7 @@ export default class NotePage extends Vue {
   private filtered: Array<Memo> = [];
   private end?: firebase.firestore.Timestamp;
   private currentUserUID: string = '';
+  private searcher = new MemoSearcher(this.note);
 
   private tagsRef: firebase.firestore.CollectionReference | null = null;
   private userRef: firebase.firestore.DocumentReference | null = null;
@@ -32,6 +34,11 @@ export default class NotePage extends Vue {
     this.fetchNote();
     this.updateRef();
     this.subscribeQuery();
+  }
+
+  @Watch('note')
+  private onUpdateNote() {
+    this.searcher.updateMemos(this.note);
   }
 
   private fetchNote() {
@@ -51,11 +58,9 @@ export default class NotePage extends Vue {
   private subscribeQuery() {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type.startsWith('memoSearchQuery')) {
-        this.filterNote(SearchQuery.words, SearchQuery.inputingWord).then(
-          (filtered) => {
-            this.filtered = filtered;
-          }
-        );
+        this.searcher.search(this.queries).then((filtered: any) => {
+          this.filtered = filtered;
+        });
       }
     });
   }
@@ -105,39 +110,24 @@ export default class NotePage extends Vue {
     });
   }
 
-  private filterNote(
-    words?: (string | null)[],
-    inputingWord?: string
-  ): Promise<Memo[]> {
-    return new Promise((resolve, reject) => {
-      const queries: (string | null)[] = [];
-      if (words) {
-        queries.push(...this.removeEmpty(words));
-      }
+  private get queries() {
+    const queries: string[] = [];
+    if (SearchQuery.words) {
+      queries.push(...this.removeEmpty(SearchQuery.words));
+    }
 
-      if (inputingWord && this.isEmptyOrOnlySpace(inputingWord)) {
-        queries.push(inputingWord);
-      }
+    if (
+      SearchQuery.inputingWord &&
+      this.isEmptyOrOnlySpace(SearchQuery.inputingWord)
+    ) {
+      queries.push(SearchQuery.inputingWord);
+    }
 
-      if (queries.length !== 0) {
-        const filtered = this.note.filter((memo) => {
-          return queries.some((q) => {
-            if (q) {
-              return memo.text.includes(q);
-            } else {
-              return false;
-            }
-          });
-        });
-        return resolve(filtered);
-      } else {
-        return resolve(this.note);
-      }
-    });
+    return queries;
   }
 
-  private removeEmpty(ary: (string | null)[]) {
-    return ary.filter((str: string | null) => {
+  private removeEmpty(ary: string[]) {
+    return ary.filter((str) => {
       return str && this.isEmptyOrOnlySpace(str);
     });
   }

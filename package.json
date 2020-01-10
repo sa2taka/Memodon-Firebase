@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit --coverage && codecov",
+    "test:unit:watch": "vue-cli-service test:unit --watch --coverage && codecov",
     "lint": "vue-cli-service lint --fix",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "format": "./node_modules/.bin/prettier --write 'src/**/*.vue' 'src/**/*.ts' 'src/**/*.js' 'tests/**/*.ts' 'tests/**/*.js', 'functions/**/*.ts' & npm run lint"
@@ -13,11 +14,12 @@
   "dependencies": {
     "@types/animejs": "^3.1.0",
     "animejs": "^3.1.0",
-    "array.prototype.flatmap": "^1.2.3",
     "core-js": "^3.6.0",
     "firebase": "^7.6.1",
     "flag-icon-css": "^3.4.5",
+    "flexsearch": "^0.6.32",
     "hard-source-webpack-plugin": "^0.13.1",
+    "n-gram": "^1.1.1",
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.11",
     "vue-class-component": "^7.0.2",
