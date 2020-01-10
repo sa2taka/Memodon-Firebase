@@ -26,7 +26,7 @@ export default class MemoSearcher {
       };
     });
     if (filtered.length === 0) {
-      return this.memos;
+      return Promise.resolve(this.memos);
     }
 
     // @ts-ignore
