@@ -149,3 +149,11 @@ export interface MastodonMediaSize {
   aspect: number;
   frame_rate?: string;
 }
+
+export function isMastodonMedia(media: any): media is MastodonMedia {
+  return 'type' in media && 'url' in media && 'preview_url' in media;
+}
+
+export function isTwitterMedia(media: any): media is TwitterMedia {
+  return 'display_url' in media && 'expanded_url' in media && 'id_str' in media;
+}
