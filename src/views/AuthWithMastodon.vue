@@ -30,12 +30,12 @@ export default class AuthWithMastodon extends Vue {
   public isLoading: boolean = false;
 
   public gotoAuthPage() {
-    const authenticateMastodon = firebase
+    const getMastodonClientInfo = firebase
       .functions()
-      .httpsCallable('authenticateMastodon');
+      .httpsCallable('getMastodonClientInfo');
     this.isLoading = true;
 
-    authenticateMastodon({ uri: this.formatedUrl })
+    getMastodonClientInfo({ uri: this.formatedUrl })
       .then((result) => {
         const { uri, clientId } = result.data;
         this.isLoading = false;

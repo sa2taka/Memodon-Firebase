@@ -7,7 +7,7 @@ const runtimeOpts = {
   memory: '256MB',
 };
 
-export const authenticateMastodon = functions
+export const getMastodonClientInfo = functions
   .runWith(runtimeOpts)
   .https.onCall((data: any, context: CallableContext) => {
     if (context.auth) {
