@@ -1,6 +1,6 @@
 import { firestore } from 'firebase-admin';
+import { generateUUID } from '../util';
 const flatMap = require('array.prototype.flatmap');
-const crypto = require('crypto');
 
 export default async function addTag(note: Array<any>, userId: string) {
   const tags = extractTags(note);
@@ -42,13 +42,6 @@ function addTagIntoRoot(tags: Array<any>) {
   );
 }
 
-function generateUUID(tag: string) {
-  return crypto
-    .createHash('sha256')
-    .update(tag, 'utf8')
-    .digest('hex');
-}
-
 function writeTag(ref: firestore.DocumentReference, tag: any) {
   return ref.get().then((snap: firestore.DocumentSnapshot) => {
     const isTagExists = snap.exists;
@@ -62,13 +55,9 @@ function writeTag(ref: firestore.DocumentReference, tag: any) {
 function extractTags(note: Array<any>): Array<string> {
   return uniq(
     flatMap(note, (memo: any) => {
-      return memo.entities.hashtags
-        .map((tag: any) => {
-          return tag.text;
-        })
-        .filter((tag: string) => {
-          return tag !== 'メモ' && tag.toLowerCase() !== 'memo';
-        });
+      return memo.entities.hashtags.filter((tag: string) => {
+        return tag !== 'メモ' && tag.toLowerCase() !== 'memo';
+      });
     })
   );
 }

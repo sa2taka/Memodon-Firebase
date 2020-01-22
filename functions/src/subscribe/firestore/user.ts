@@ -1,12 +1,10 @@
 import { EventContext } from 'firebase-functions';
 import { firestore } from 'firebase-admin';
 
-import fetchTwitterMemo from '../../fetchMemos/fetchTwitterMemo';
-import updateUserFetchedTime from '../../firestore/updateUserFetchedTime';
-import addTag from '../../firestore/addTag';
-import addMemo from '../../firestore/addMemo';
-
 import { consumerKey, consumerSecret } from '../../secrets/twitter';
+
+import { updateMainUserNote } from '../../firestore/updateNote';
+import updateUserFetchedTime from '../../firestore/updateUserFetchedTime';
 
 const rp = require('request-promise');
 const functions = require('firebase-functions');
@@ -25,60 +23,18 @@ export const onCreate = functions
     const user = snap.data();
 
     if (typeof user === 'undefined') {
+      console.error('undefine user');
       return;
     }
 
     return Promise.all([
-      isPublic(user.twitterId).then((ans) => {
+      isPublic(user.providerId).then((ans) => {
         return snap.ref.set({ isPublic: ans }, { merge: true });
       }),
-      saveMemos(snap).then(() => {
-        return updateUserFetchedTime(snap.id);
-      }),
+      updateMainUserNote(snap),
+      updateUserFetchedTime(snap.id),
     ]);
   });
-
-function saveMemos(snap: firestore.DocumentSnapshot): Promise<any> {
-  const userData = snap.data();
-  const userRef = snap.ref;
-
-  if (!userData) {
-    return Promise.resolve();
-  }
-
-  return userRef
-    .collection('secrets')
-    .doc('twitter.com')
-    .get()
-    .then((value: firestore.DocumentData) => {
-      const secretData = value.data();
-
-      if (!secretData) {
-        return;
-      }
-      const { token, secret } = secretData[userData.twitterId];
-
-      return fetchTwitterMemo(userData.twitterId, token, secret);
-    })
-    .then((noteForUser: Array<any> | undefined) => {
-      if (!noteForUser) {
-        return;
-      }
-
-      const note = noteForUser.map((value: any) => {
-        value.uid = snap.id;
-        value.user = userRef;
-
-        return value;
-      });
-
-      return Promise.all([
-        addMemo(note, snap.id).then,
-        addTag(noteForUser, snap.id),
-        updateUserFetchedTime(snap.id),
-      ]);
-    });
-}
 
 export function isPublic(twitterId: string): Promise<boolean> {
   return get(userInfoEndPoint, {

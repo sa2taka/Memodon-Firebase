@@ -3,7 +3,10 @@ import VueRouter, { Route, RawLocation, NavigationGuard } from 'vue-router';
 import firebase from '../firebase';
 
 import Top from '../views/Top.vue';
-import Note from '../views/Note.vue';
+import Note from '../views/NotePage.vue';
+import Settings from '../views/Settings.vue';
+import AuthWithMastodon from '../views/AuthWithMastodon.vue';
+import GetMastodonToken from '../views/GetMastodonToken.vue';
 
 Vue.use(VueRouter);
 
@@ -18,6 +21,42 @@ const routes = [
     path: '/note',
     name: 'note',
     component: Note,
+    meta: { auth: true },
+  },
+  {
+    path: '/setting',
+    name: 'setting',
+    component: Settings,
+    meta: { auth: true },
+  },
+  {
+    path: '/setting#account',
+    name: 'setting-account',
+    component: Settings,
+    meta: { auth: true },
+  },
+  {
+    path: '/setting#users',
+    name: 'setting-users',
+    component: Settings,
+    meta: { auth: true },
+  },
+  {
+    path: '/setting#tags',
+    name: 'setting-tags',
+    component: Settings,
+    meta: { auth: true },
+  },
+  {
+    path: '/auth/mastodon',
+    name: 'authWithMastodon',
+    component: AuthWithMastodon,
+    meta: { auth: true },
+  },
+  {
+    path: '/auth/mastodon/code',
+    name: 'getAccessToken',
+    component: GetMastodonToken,
     meta: { auth: true },
   },
 ];
