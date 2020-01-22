@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { getAccessToken } from '@/libs/mastodonUser';
+import { getAccessToken } from '@/libs/authWithMastodon';
 
 @Component
 export default class GetMastodonToken extends Vue {
