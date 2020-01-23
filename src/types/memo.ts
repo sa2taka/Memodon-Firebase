@@ -26,7 +26,7 @@ export interface MemoBase {
 
 export interface TwitterEntities {
   hashtags: string[];
-  media?: TwitterMedia;
+  media?: TwitterMedia[];
   urls: TwitterURL[];
   user_mentions: TwitterUserMention[];
   symbols: TwitterSymbol[];
@@ -148,6 +148,14 @@ export interface MastodonMediaSize {
   size: string;
   aspect: number;
   frame_rate?: string;
+}
+
+export function isMastodonMemo(memo: any): memo is MastodonMemo {
+  return memo.provider !== 'twitter.com';
+}
+
+export function isTwitterMemo(memo: any): memo is TwitterMemo {
+  return memo.provider === 'twitter.com';
 }
 
 export function isMastodonMedia(media: any): media is MastodonMedia {

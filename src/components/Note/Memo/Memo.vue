@@ -1,10 +1,8 @@
 <template>
   <v-card class="mx-2 mt-4 pa-3">
-    <twitter-memo
-      :memo="memo"
-      v-if="memo.provider === 'twitter.com'"
-    ></twitter-memo>
+    <twitter-memo :memo="memo" v-if="isTwitterMemo(memo)"></twitter-memo>
     <mastodon-memo :memo="memo" v-else></mastodon-memo>
+    <media-area :memo="memo"></media-area>
   </v-card>
 </template>
 
@@ -13,12 +11,13 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import TwitterMemo from '@/components/Note/Memo/TwitterMemo.vue';
 import MastodonMemo from '@/components/Note/Memo/MastodonMemo.vue';
-import { Memo as IMemo } from '@/types/memo';
+import MediaArea from '@/components/Note/Memo/Media/MediaArea.vue';
+import { Memo as IMemo, isTwitterMemo } from '@/types/memo';
 
 import MemoSearchQuery from '@/store/modules/memoSearchQuery';
 
 @Component({
-  components: { TwitterMemo, MastodonMemo },
+  components: { TwitterMemo, MastodonMemo, MediaArea },
 })
 export default class Memo extends Vue {
   @Prop({ required: true })
@@ -26,6 +25,10 @@ export default class Memo extends Vue {
   public mounted() {
     this.setGridRow();
     this.registerMemoTagClickListener();
+  }
+
+  public isTwitterMemo(memo: TwitterMemo | MastodonMemo) {
+    return isTwitterMemo(memo);
   }
 
   private registerMemoTagClickListener() {
