@@ -21,6 +21,9 @@
     "firebase-functions": "^3.3.0",
     "masto": "^2.8.1",
     "moment": "^2.24.0",
+    "object.entries": "^1.1.1",
+    "object.fromentries": "^2.0.2",
+    "ogp-parser": "^0.4.4",
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
     "uuid": "^3.3.3"
