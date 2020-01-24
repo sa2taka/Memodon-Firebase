@@ -1,17 +1,17 @@
 <template>
-  <article class="inline-ogp">
-    <div class="inline-ogp_left-bar"></div>
-    <figure class="ogp-icon">
-      <v-img width="64" height="64" :src="image" />
-    </figure>
+  <transition name="fade">
+    <article class="inline-ogp" v-if="visible">
+      <div class="inline-ogp_left-bar"></div>
+      <figure class="ogp-icon">
+        <v-img width="64" height="64" :src="image" />
+      </figure>
 
-    <h4 class="mb-0 ogp-title">
-      {{ title }}
-    </h4>
-    <p class="mb-0 ogp-description">
-      <small> {{ description }}</small>
-    </p>
-  </article>
+      <h4 class="mb-0 ogp-title">{{ title }}</h4>
+      <p class="mb-0 ogp-description">
+        <small>{{ description }}</small>
+      </p>
+    </article>
+  </transition>
 </template>
 
 <script lang="ts">
@@ -28,6 +28,7 @@ export default class MediaArea extends Vue {
   @Prop({ required: true })
   url!: string;
 
+  public visible = false;
   public siteName: string = '';
   public title: string = '';
   public ogpUrl: string = '';
@@ -39,9 +40,18 @@ export default class MediaArea extends Vue {
     fetchOgp({ url: this.url }).then((ogp: any) => {
       this.siteName = ogp.data['og:site_name'] || '';
       this.title = ogp.data['og:title'] || '';
-      this.ogpUrl = ogp.data['og:url'] || '';
+      this.ogpUrl = ogp.data['og:url'] || this.url;
       this.image = ogp.data['og:image'] || '';
       this.description = ogp.data['og:description'] || '';
+      if (
+        this.siteName !== '' &&
+        this.title !== '' &&
+        this.ogpUrl !== '' &&
+        this.description !== ''
+      ) {
+        this.visible = true;
+        this.$emit('display');
+      }
     });
   }
 }
@@ -98,5 +108,16 @@ $bottom-height: 70px;
   margin-top: 12px;
   margin-right: 6px;
   grid-area: g1;
+}
+.fade {
+  &-enter-active,
+  &-leave-active {
+    transition: all 0.8s;
+  }
+  &-enter,
+  &-leave-to {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
 }
 </style>

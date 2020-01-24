@@ -2,7 +2,7 @@
   <v-card class="mx-2 mt-4 pa-3">
     <twitter-memo :memo="memo" v-if="isTwitterMemo(memo)"></twitter-memo>
     <mastodon-memo :memo="memo" v-else></mastodon-memo>
-    <ogp :url="firstUrl" v-if="firstUrl"></ogp>
+    <ogp :url="firstUrl" v-if="firstUrl" @display="setGridRow(true)"></ogp>
     <media-area :memo="memo"></media-area>
   </v-card>
 </template>
@@ -52,17 +52,22 @@ export default class Memo extends Vue {
     }
   }
 
+  public setGridRow(containsOgp?: boolean) {
+    // Height is changed with hard-coded value because the display collapses when ogp is displayed
+    const height = containsOgp
+      ? this.$el.scrollHeight + 108
+      : this.$el.scrollHeight;
+    this.$el.setAttribute(
+      'style',
+      `grid-row: span ${Math.ceil(height / 20)};height: ${height}px;`
+    );
+  }
   private registerMemoTagClickListener() {
     this.$el.querySelectorAll('.memo-tag').forEach((elm) => {
       elm.addEventListener('click', () => {
         MemoSearchQuery.setWords([elm.innerHTML]);
       });
     });
-  }
-
-  private setGridRow() {
-    const height = this.$el.scrollHeight;
-    this.$el.setAttribute('style', `grid-row: span ${Math.ceil(height / 20)};`);
   }
 }
 </script>
