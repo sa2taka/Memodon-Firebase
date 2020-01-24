@@ -15,9 +15,9 @@ if (!process.env.FUNCTION_NAME || process.env.FUNCTION_NAME === 'fetchMemo') {
 
 if (
   !process.env.FUNCTION_NAME ||
-  process.env.FUNCTION_NAME === 'authenticateMastodon'
+  process.env.FUNCTION_NAME === 'getMastodonClientInfo'
 ) {
-  exports.authenticateMastodon = require('./subscribe/https/authenticateMastodon').authenticateMastodon;
+  exports.getMastodonClientInfo = require('./subscribe/https/getMastodonClientInfo').getMastodonClientInfo;
 }
 
 if (

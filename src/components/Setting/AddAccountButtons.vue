@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import { startAuthWithMastodonWindow } from '@/libs/mastodonUser';
+import { startAuthWithMastodonWindow } from '@/libs/authWithMastodon';
 
 @Component
 export default class AddAccountButtons extends Vue {
