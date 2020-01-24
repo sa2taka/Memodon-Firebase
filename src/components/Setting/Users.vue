@@ -1,5 +1,5 @@
 <template>
-  <div id="account" class="mt-4">
+  <div id="account" class="mt-4 mb-3">
     <v-subheader>{{ $t('main-account') }}</v-subheader>
     <user-info :user="mainUser"></user-info>
 
