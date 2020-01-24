@@ -3,7 +3,7 @@ import { CallableContext } from 'firebase-functions/lib/providers/https';
 const functions = require('firebase-functions');
 
 const runtimeOpts = {
-  timeoutSeconds: 300,
+  timeoutSeconds: 6,
   memory: '256MB',
 };
 
