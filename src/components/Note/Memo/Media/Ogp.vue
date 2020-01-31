@@ -36,7 +36,10 @@ export default class MediaArea extends Vue {
   public description: string = '';
 
   public created() {
-    const fetchOgp = firebase.functions().httpsCallable('fetchOgp');
+    const fetchOgp = firebase
+      .app()
+      .functions('asia-northeast1')
+      .httpsCallable('fetchOgp');
     fetchOgp({ url: this.url }).then((ogp: any) => {
       this.siteName = ogp.data['og:site_name'] || '';
       this.title = ogp.data['og:title'] || '';

@@ -18,7 +18,8 @@ export function getAccessToken(code: string) {
   const redirectUri = createRedirectUri();
 
   const getMastodonToken = firebase
-    .functions()
+    .app()
+    .functions('asia-northeast1')
     .httpsCallable('getMastodonToken');
 
   return getMastodonToken({ code, uri, redirectUri });

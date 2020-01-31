@@ -43,7 +43,10 @@ export default class fetchMemoButton extends Vue {
   }
 
   public callToFetchMemo() {
-    const fetchMemo = firebase.functions().httpsCallable('fetchMemo');
+    const fetchMemo = firebase
+      .app()
+      .functions('asia-northeast1')
+      .httpsCallable('fetchMemo');
     this.isLoading = true;
     this.disable = true;
 
