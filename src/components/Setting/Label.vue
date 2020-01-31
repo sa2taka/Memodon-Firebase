@@ -8,9 +8,17 @@
       label
       @click:close="deleteLabel"
     >
-      <v-text-field :class="[isCloseToBlack ? 'white-caret' : 'black-caret']">{{
-        label.text
-      }}</v-text-field>
+      <v-btn text icon x-small>
+        <v-icon :color="isCloseToBlack ? 'white' : 'black'">fa-palette</v-icon>
+      </v-btn>
+      <v-text-field
+        :class="[
+          isCloseToBlack ? 'white-caret' : 'black-caret',
+          'label-input',
+          'mt-2',
+        ]"
+        >{{ label.text }}</v-text-field
+      >
     </v-chip>
   </div>
 </template>
@@ -41,7 +49,7 @@ export default class Label extends Vue {
       .delete();
   }
 
-  private isCloseToBlack() {
+  private get isCloseToBlack() {
     const colorMatch = this.label.color.match(
       /#([0-9a-f-A-F]{2})([0-9a-f-A-F]{2})([0-9a-f-A-F]{2})/
     );
@@ -57,10 +65,6 @@ export default class Label extends Vue {
 </script>
 
 <style lang="scss">
-.user-label {
-  min-width: 128px;
-}
-
 .white-caret input {
   caret-color: white !important;
   color: white;
