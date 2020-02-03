@@ -16,9 +16,11 @@
           isCloseToBlack ? 'white-caret' : 'black-caret',
           'label-input',
           'mt-2',
+          'ml-2',
         ]"
-        >{{ label.text }}</v-text-field
-      >
+        :placeholder="$t('label-placeholder')"
+        v-model="labelText"
+      ></v-text-field>
     </v-chip>
   </div>
 </template>
@@ -37,6 +39,7 @@ export default class Label extends Vue {
     tag: string;
     appendDate: firebase.firestore.Timestamp;
   };
+  public labelText = this.label.text;
 
   public deleteLabel() {
     const currentUserUID = firebase.auth().currentUser!.uid;
@@ -81,3 +84,14 @@ export default class Label extends Vue {
   content: none !important;
 }
 </style>
+
+<i18n>
+{
+  "en": {
+    "label-placeholder": "Input label name"
+  }, 
+  "jp": {
+    "label-placeholder": "ラベル名を入力"
+  }
+}
+</i18n>
