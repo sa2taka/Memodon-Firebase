@@ -1,35 +1,38 @@
 <template>
-  <div class="mt-4 mb-3">
-    <v-chip
-      :color="label.color"
-      class="user-label"
-      close
-      close-icon="mdi-close"
-      label
-      @click:close="deleteLabel"
-    >
-      <v-btn text icon x-small>
-        <v-icon :color="isCloseToBlack ? 'white' : 'black'">fa-palette</v-icon>
-      </v-btn>
-      <v-text-field
-        :class="[
-          isCloseToBlack ? 'white-caret' : 'black-caret',
-          'label-input',
-          'mt-2',
-          'ml-2',
-        ]"
-        :placeholder="$t('label-placeholder')"
-        v-model="labelText"
-      ></v-text-field>
-    </v-chip>
-  </div>
+  <v-row class="mt-1 mb-2">
+    <v-col>
+      <v-chip :color="label.color" class="user-label" label>
+        <span :class="[isCloseToBlack ? 'white--text' : 'black--text']">{{
+          label.text
+        }}</span>
+        <v-dialog
+          v-model="dialog"
+          fullscreen="isMobileWidth"
+          hide-overlay
+          persistent
+        >
+          <template v-slottactivator="{ on }">
+            <v-btn text icon class="ml-auto mr-0">
+              <v-icon small>fa-pen</v-icon>
+            </v-btn>
+            <label-editor :label="label"></label-editor>
+          </template>
+        </v-dialog>
+      </v-chip>
+    </v-col>
+  </v-row>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import firebase from '@/firebase';
+import LabelEditor from '@/components/Setting/LabelEditor.vue';
+import { MinSmallWidth } from '@/libs/globalConstVariables';
 
-@Component
+@Component({
+  components: {
+    LabelEditor,
+  },
+})
 export default class Label extends Vue {
   @Prop({ required: true })
   public label!: {
@@ -39,18 +42,16 @@ export default class Label extends Vue {
     tag: string;
     appendDate: firebase.firestore.Timestamp;
   };
-  public labelText = this.label.text;
 
-  public deleteLabel() {
-    const currentUserUID = firebase.auth().currentUser!.uid;
-    firebase
-      .firestore()
-      .collection('users')
-      .doc(currentUserUID)
-      .collection('labels')
-      .doc(this.label.id)
-      .delete();
+  public isSmartphoneWidth = false;
+  public dialog = false;
+
+  public created() {
+    this.detectDevice();
+    this.subscribeResizeWindow();
   }
+
+  private BoundaryWidth = MinSmallWidth;
 
   private get isCloseToBlack() {
     const colorMatch = this.label.color.match(
@@ -64,34 +65,29 @@ export default class Label extends Vue {
     const [_, ...color] = colorMatch;
     return color.reduce((a, b) => a + parseInt(b, 16), 0) / 3 < 384; // 256 * 3 / 2
   }
+
+  private detectDevice() {
+    if (window.innerWidth > this.BoundaryWidth) {
+      this.isSmartphoneWidth = false;
+    } else {
+      this.isSmartphoneWidth = true;
+    }
+  }
+
+  private subscribeResizeWindow() {
+    window.addEventListener('resize', () => {
+      this.detectDevice();
+    });
+  }
 }
 </script>
 
 <style lang="scss">
-.white-caret input {
-  caret-color: white !important;
-  color: white;
-}
-
-.black-caret input {
-  caret-color: black !important;
-  color: black;
-}
-
-// HACK: Delete v-text-field underline
-.v-input__slot::before,
-.v-input__slot::after {
-  content: none !important;
-}
-</style>
-
-<i18n>
-{
-  "en": {
-    "label-placeholder": "Input label name"
-  }, 
-  "jp": {
-    "label-placeholder": "ラベル名を入力"
+.user-label {
+  min-width: 18em;
+  // HACK
+  & > .v-chip__content {
+    width: 100%;
   }
 }
-</i18n>
+</style>
