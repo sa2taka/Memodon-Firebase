@@ -35,6 +35,7 @@ export default class Labels extends Vue {
       .collection('users')
       .doc(currentUserUID)
       .collection('labels')
+      .orderBy('appendDate')
       .onSnapshot((snapshot) => {
         this.labels = snapshot.docs.map((label) => {
           const data = label.data()!;

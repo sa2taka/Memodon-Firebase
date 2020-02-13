@@ -5,13 +5,17 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import firebase from '@/firebase';
+import { swatches } from '@/libs/globalConstVariables';
 
 @Component
 export default class AddLabelButton extends Vue {
   public addLabel() {
     const currentUserUID = firebase.auth().currentUser!.uid;
+    const flatColors = swatches.flat();
+    const rand = Math.floor(Math.random() * flatColors.length);
+    const color = flatColors[rand];
     const defaultLable = {
-      color: '#ff5722',
+      color,
       text: '',
       tags: [],
       appendDate: firebase.firestore.FieldValue.serverTimestamp(),
