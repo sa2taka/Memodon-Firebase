@@ -31,11 +31,11 @@ export default class Note extends Vue {
 #note > * {
   display: grid;
   grid-template-rows: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
 .memo {
-  min-width: 320px;
+  min-width: 280px;
   display: inline-block;
   transition: all 0.4s;
   box-sizing: border-box;

@@ -2,21 +2,21 @@
   <v-row class="mt-1 mb-2">
     <v-col>
       <v-chip :color="label.color" class="user-label" label>
-        <span :class="[isCloseToBlack ? 'white--text' : 'black--text']">{{
-          label.text
-        }}</span>
-        <v-dialog
-          v-model="dialog"
-          fullscreen="isMobileWidth"
-          hide-overlay
-          persistent
-        >
-          <template v-slottactivator="{ on }">
-            <v-btn text icon class="ml-auto mr-0">
+        <span :class="[isCloseToBlack ? 'white--text' : 'black--text']">
+          {{ label.text }}
+        </span>
+
+        <v-dialog v-model="dialog" :fullscreen="isSmartphoneWidth">
+          <template v-slot:activator="{ on }">
+            <v-btn text icon class="ml-auto mr-0" v-on="on">
               <v-icon small>fa-pen</v-icon>
             </v-btn>
-            <label-editor :label="label"></label-editor>
           </template>
+          <label-editor
+            :label="label"
+            :isSmartphoneWidth="isSmartphoneWidth"
+            @close="dialog = false"
+          ></label-editor>
         </v-dialog>
       </v-chip>
     </v-col>
@@ -39,7 +39,7 @@ export default class Label extends Vue {
     id: string;
     color: string;
     text: string;
-    tag: string;
+    tags: string[];
     appendDate: firebase.firestore.Timestamp;
   };
 

@@ -13,7 +13,7 @@ export default class AddLabelButton extends Vue {
     const defaultLable = {
       color: '#ff5722',
       text: '',
-      tag: '',
+      tags: [],
       appendDate: firebase.firestore.FieldValue.serverTimestamp(),
     };
     firebase
