@@ -19,6 +19,8 @@ import firebase from '@/firebase';
 import AddLabelButton from '@/components/Setting/AddLabelButton.vue';
 import UserLabel from '@/components/Setting/Label.vue';
 
+import { Label } from '@/types/label';
+
 @Component({
   components: {
     AddLabelButton,
@@ -26,7 +28,7 @@ import UserLabel from '@/components/Setting/Label.vue';
   },
 })
 export default class Labels extends Vue {
-  public labels: any[] = [];
+  public labels: Label[] = [];
 
   public created() {
     const currentUserUID = firebase.auth().currentUser!.uid;
@@ -40,7 +42,7 @@ export default class Labels extends Vue {
         this.labels = snapshot.docs.map((label) => {
           const data = label.data()!;
           data.id = label.id;
-          return data;
+          return data as Label;
         });
       });
   }

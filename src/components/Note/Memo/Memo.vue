@@ -1,5 +1,6 @@
 <template>
   <v-card class="mx-2 mt-4 pa-3">
+    <label-list :labels="labels"></label-list>
     <twitter-memo :memo="memo" v-if="isTwitterMemo(memo)"></twitter-memo>
     <mastodon-memo :memo="memo" v-else></mastodon-memo>
     <ogp :url="firstUrl" v-if="firstUrl" @display="setGridRow(true)"></ogp>
@@ -14,16 +15,22 @@ import TwitterMemo from '@/components/Note/Memo/TwitterMemo.vue';
 import MastodonMemo from '@/components/Note/Memo/MastodonMemo.vue';
 import MediaArea from '@/components/Note/Memo/Media/MediaArea.vue';
 import Ogp from '@/components/Note/Memo/Media/Ogp.vue';
+import LabelList from '@/components/Note/Memo/LabelList.vue';
 import { Memo as IMemo, isTwitterMemo } from '@/types/memo';
 
+import firebase from '@/firebase';
+
 import MemoSearchQuery from '@/store/modules/memoSearchQuery';
+import Labels from '@/store/modules/labels';
+import { Label } from '@/types/label';
 
 @Component({
-  components: { TwitterMemo, MastodonMemo, MediaArea, Ogp },
+  components: { TwitterMemo, MastodonMemo, MediaArea, Ogp, LabelList },
 })
 export default class Memo extends Vue {
   @Prop({ required: true })
   public memo!: IMemo;
+
   public mounted() {
     this.setGridRow();
     this.registerMemoTagClickListener();
@@ -62,6 +69,11 @@ export default class Memo extends Vue {
       `grid-row: span ${Math.ceil(height / 20)};height: ${height}px;`
     );
   }
+
+  public get labels(): Label[] {
+    return Labels.labels;
+  }
+
   private registerMemoTagClickListener() {
     this.$el.querySelectorAll('.memo-tag').forEach((elm) => {
       elm.addEventListener('click', () => {
@@ -72,16 +84,4 @@ export default class Memo extends Vue {
 }
 </script>
 
-<style lang="scss">
-.memo-paper {
-  background-image: linear-gradient(
-    180deg,
-    rgba(204, 204, 204, 0) 0%,
-    rgba(204, 204, 204, 0) 98.5%,
-    #444444 100%
-  );
-  background-repeat: repeat-y;
-  background-size: 100% 2.4em;
-  line-height: 2.4;
-}
-</style>
+<style lang="scss"></style>

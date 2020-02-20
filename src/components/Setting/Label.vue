@@ -2,9 +2,9 @@
   <v-row class="mt-1 mb-2">
     <v-col>
       <v-chip :color="label.color" class="user-label" label>
-        <span :class="[isCloseToBlack ? 'white--text' : 'black--text']">{{
-          label.text
-        }}</span>
+        <span :class="[isCloseToBlack ? 'white--text' : 'black--text']">
+          {{ label.text }}
+        </span>
 
         <v-dialog
           v-model="dialog"
@@ -33,6 +33,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import LabelEditor from '@/components/Setting/LabelEditor.vue';
 import { MinSmallWidth } from '@/libs/globalConstVariables';
+import { Label as ILabel } from '@/types/label';
 
 @Component({
   components: {
@@ -41,13 +42,7 @@ import { MinSmallWidth } from '@/libs/globalConstVariables';
 })
 export default class Label extends Vue {
   @Prop({ required: true })
-  public label!: {
-    id: string;
-    color: string;
-    text: string;
-    tags: string[];
-    appendDate: firebase.firestore.Timestamp;
-  };
+  public label!: ILabel;
 
   public isSmartphoneWidth = false;
   public dialog = false;

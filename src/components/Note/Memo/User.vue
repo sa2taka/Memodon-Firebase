@@ -1,13 +1,19 @@
 <template>
-  <div class="memo-user">
-    <img class="icon ml-4 mr-2" v-lazy="user.iconUrl" v-if="user" />
-    <div class="name" v-if="user">
+  <div class="memo-user" v-if="user">
+    <img class="icon ml-4 mr-2" v-lazy="user.iconUrl" />
+    <div class="name">
       <span class="display-name">{{ user.displayName }}</span>
       <span class="username"
-        >{{ user.provider || 'twitter.com' }}@{{ user.userName }}</span
+        >{{ user.userName }}@{{ user.provider || 'twitter.com' }}</span
       >
     </div>
   </div>
+  <v-skeleton-loader
+    ref="skeleton"
+    type="list-item-avatar-two-line"
+    class="mx-auto"
+    v-else
+  ></v-skeleton-loader>
 </template>
 
 <script lang="ts">
@@ -50,5 +56,12 @@ export default class User extends Vue {
 .username {
   font-size: 0.8em;
   color: #999;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-skelton {
+  height: 48px;
+  width: 100%;
 }
 </style>
