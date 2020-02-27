@@ -105,7 +105,9 @@ export default class NotePage extends Vue {
 
       snapshots.forEach((snapshot) => {
         this.end = snapshot.data().timestamp;
-        this.note.push(snapshot.data() as Memo);
+        const data = snapshot.data();
+        data.firebaseId = snapshot.id;
+        this.note.push(data as Memo);
       });
       this.filtered = this.note;
     });

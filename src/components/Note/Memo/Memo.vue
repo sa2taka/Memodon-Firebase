@@ -1,6 +1,10 @@
 <template>
   <v-card class="mx-2 mt-4 pa-3">
-    <label-list :labels="labels"></label-list>
+    <label-list
+      :labels="labels"
+      :specifiedLabels="specifiedLabels"
+      :memoId="memo.firebaseId"
+    ></label-list>
     <twitter-memo :memo="memo" v-if="isTwitterMemo(memo)"></twitter-memo>
     <mastodon-memo :memo="memo" v-else></mastodon-memo>
     <ogp :url="firstUrl" v-if="firstUrl" @display="setGridRow(true)"></ogp>
@@ -71,16 +75,24 @@ export default class Memo extends Vue {
   }
 
   public get labels(): Label[] {
+    return Labels.labels.filter(
+      (label) => this.isSpecifiedLabel(label) || this.isCategoryLabel(label)
+    );
+  }
+
+  public get specifiedLabels(): Label[] {
     return Labels.labels.filter((label) => this.isSpecifiedLabel(label));
   }
 
   private isSpecifiedLabel(label: Label) {
     const specifiedLabels = this.memo.labels || [];
+
+    return specifiedLabels.some((sl) => sl.id === label.id);
+  }
+
+  private isCategoryLabel(label: Label) {
     const tags = this.memo.entities.hashtags;
-    return (
-      tags.some((tag) => label.tags.includes(`#${tag}`)) ||
-      specifiedLabels.some((sl) => sl.id === label.id)
-    );
+    return tags.some((tag) => label.tags.includes(`#${tag}`));
   }
 
   private registerMemoTagClickListener() {

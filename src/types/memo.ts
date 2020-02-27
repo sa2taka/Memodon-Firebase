@@ -14,6 +14,7 @@ export interface MastodonMemo extends MemoBase {
 
 export interface MemoBase {
   id: number | string;
+  firebaseId: string;
   provider: string;
   providerId: number | string;
   text: string;

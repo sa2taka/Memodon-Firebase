@@ -12,7 +12,7 @@ export interface ILabels {
   labels: Label[];
 }
 
-@Module({ dynamic: true, store, name: 'memoSearchQuery', namespaced: true })
+@Module({ dynamic: true, store, name: 'labels', namespaced: true })
 class Labels extends VuexModule implements ILabels {
   public labels: Label[] = [];
 
