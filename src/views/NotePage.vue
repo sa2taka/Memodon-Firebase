@@ -58,7 +58,7 @@ export default class NotePage extends Vue {
   private subscribeQuery() {
     this.$store.subscribe((mutation, state) => {
       if (mutation.type.startsWith('memoSearchQuery')) {
-        this.searcher.search(this.queries).then((filtered: any) => {
+        this.searcher.search(this.queries()).then((filtered: any) => {
           this.filtered = filtered;
         });
       }
@@ -102,6 +102,7 @@ export default class NotePage extends Vue {
         return;
       }
       this.note = [];
+
       snapshots.forEach((snapshot) => {
         this.end = snapshot.data().timestamp;
         this.note.push(snapshot.data() as Memo);
@@ -110,7 +111,8 @@ export default class NotePage extends Vue {
     });
   }
 
-  private get queries() {
+  // Do no use get(computed property) to prevent cache
+  private queries() {
     const queries: string[] = [];
     if (SearchQuery.words) {
       queries.push(...this.removeEmpty(SearchQuery.words));
