@@ -22,6 +22,7 @@ export interface MemoBase {
   timestamp: firebase.firestore.Timestamp;
   createdAt: firebase.firestore.Timestamp;
   updatedAt: firebase.firestore.Timestamp;
+  labels?: firebase.firestore.DocumentReference[];
 }
 
 export interface TwitterEntities {

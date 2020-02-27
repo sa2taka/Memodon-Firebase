@@ -71,7 +71,16 @@ export default class Memo extends Vue {
   }
 
   public get labels(): Label[] {
-    return Labels.labels;
+    return Labels.labels.filter((label) => this.isSpecifiedLabel(label));
+  }
+
+  private isSpecifiedLabel(label: Label) {
+    const specifiedLabels = this.memo.labels || [];
+    const tags = this.memo.entities.hashtags;
+    return (
+      tags.some((tag) => label.tags.includes(`#${tag}`)) ||
+      specifiedLabels.some((sl) => sl.id === label.id)
+    );
   }
 
   private registerMemoTagClickListener() {

@@ -97,7 +97,7 @@ export default class memoSearcher extends Vue {
     const formatedSearching = this.search
       ? this.search.replace(/^\s+/g, '').replace(/\s+$/g, '')
       : '';
-    const formatedWords = this.removeSpace(this.searchWords);
+    const formatedWords = this.removeSpace(this.searchWords) || [];
     return {
       words: formatedWords,
       inputingWord: formatedSearching,
