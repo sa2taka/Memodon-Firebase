@@ -23,17 +23,29 @@ import MemoSearcher from '@/libs/memoSearcher';
 export default class NotePage extends Vue {
   private note: Array<Memo> = [];
   private filtered: Array<Memo> = [];
-  private end?: firebase.firestore.Timestamp;
+  private end?: firebase.firestore.QueryDocumentSnapshot;
   private currentUserUID: string = '';
   private searcher = new MemoSearcher(this.note);
 
   private tagsRef: firebase.firestore.CollectionReference | null = null;
   private userRef: firebase.firestore.DocumentReference | null = null;
 
+  private isAllMemoCrawled = false;
+  private isFetching = false;
+  private ticking = false;
+
   public created() {
     this.fetchNote();
     this.updateRef();
     this.subscribeQuery();
+  }
+
+  mounted() {
+    this.subscribeScroll();
+  }
+
+  beforeDestroy() {
+    this.unsubscribeScroll();
   }
 
   @Watch('note')
@@ -94,22 +106,23 @@ export default class NotePage extends Vue {
       .limit(40);
 
     if (this.end) {
-      ref = ref.endBefore(this.end);
+      ref = ref.startAfter(this.end);
     }
 
     ref.onSnapshot((snapshots) => {
       if (snapshots.empty) {
+        this.isAllMemoCrawled = false;
         return;
       }
-      this.note = [];
 
       snapshots.forEach((snapshot) => {
-        this.end = snapshot.data().timestamp;
+        this.end = snapshot;
         const data = snapshot.data();
         data.firebaseId = snapshot.id;
         this.note.push(data as Memo);
       });
       this.filtered = this.note;
+      this.isFetching = false;
     });
   }
 
@@ -138,6 +151,36 @@ export default class NotePage extends Vue {
 
   private isEmptyOrOnlySpace(str: string) {
     return str.replace(/^\s+/g, '').replace(/\s+$/g, '') !== '';
+  }
+
+  subscribeScroll() {
+    document.addEventListener('scroll', this.handleScroll, { passive: true });
+  }
+
+  unsubscribeScroll() {
+    document.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll(event: Event) {
+    const lastScrollPosition = window.scrollY;
+    const windowHeight = window.innerHeight;
+    const pageHeight = document.documentElement.scrollHeight;
+
+    if (!this.ticking) {
+      window.requestAnimationFrame(() => {
+        if (
+          !this.isAllMemoCrawled &&
+          !this.isFetching &&
+          pageHeight - windowHeight * 3 < lastScrollPosition
+        ) {
+          this.isFetching = true;
+          this.fetchNote();
+        }
+        this.ticking = false;
+      });
+
+      this.ticking = true;
+    }
   }
 }
 </script>
