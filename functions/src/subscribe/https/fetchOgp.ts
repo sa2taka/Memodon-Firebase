@@ -1,17 +1,17 @@
-import { getMastodonToken as gmt } from '../../mastodon/authWithMastodon';
 import { CallableContext } from 'firebase-functions/lib/providers/https';
+import fo from '../../ogp/fetchOgp';
 const functions = require('firebase-functions');
 
 const runtimeOpts = {
-  timeoutSeconds: 6,
+  timeoutSeconds: 300,
   memory: '256MB',
 };
 
-export const getMastodonToken = functions
+export const fetchOgp = functions
   .runWith(runtimeOpts)
   .https.onCall((data: any, context: CallableContext) => {
     if (context.auth) {
-      return gmt(data.code, data.uri, data.redirectUri, context.auth.uid);
+      return fo(data.url);
     } else {
       throw new Error('unauthenticate');
     }

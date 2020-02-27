@@ -14,6 +14,7 @@ export interface MastodonMemo extends MemoBase {
 
 export interface MemoBase {
   id: number | string;
+  firebaseId: string;
   provider: string;
   providerId: number | string;
   text: string;
@@ -22,36 +23,37 @@ export interface MemoBase {
   timestamp: firebase.firestore.Timestamp;
   createdAt: firebase.firestore.Timestamp;
   updatedAt: firebase.firestore.Timestamp;
+  labels?: firebase.firestore.DocumentReference[];
 }
 
-interface TwitterEntities {
+export interface TwitterEntities {
   hashtags: string[];
-  media?: TwitterMedia;
+  media?: TwitterMedia[];
   urls: TwitterURL[];
   user_mentions: TwitterUserMention[];
   symbols: TwitterSymbol[];
 }
 
-interface TwitterExtendedEntities {
+export interface TwitterExtendedEntities {
   media: TwitterMedia[];
 }
 
-interface MastodonEntities {
+export interface MastodonEntities {
   hashtags: string[];
   media: MastodonMedia[];
 }
 
-interface TwitterSymbol extends TwitterEntityBase {
+export interface TwitterSymbol extends TwitterEntityBase {
   text: string;
 }
 
-interface TwitterURL extends TwitterEntityBase {
+export interface TwitterURL extends TwitterEntityBase {
   display_url: string;
   expanded_url: string;
   url: string;
 }
 
-interface TwitterMedia extends TwitterEntityBase {
+export interface TwitterMedia extends TwitterEntityBase {
   display_url: string;
   expanded_url: string;
   id: number;
@@ -69,36 +71,36 @@ interface TwitterMedia extends TwitterEntityBase {
   video_info?: TwitterVideoInfo;
 }
 
-interface TwitterUserMention extends TwitterEntityBase {
+export interface TwitterUserMention extends TwitterEntityBase {
   name: string;
   screen_name: string;
   id: number;
   id_str: string;
 }
 
-interface TwitterEntityBase {
+export interface TwitterEntityBase {
   indices: number[];
 }
 
-interface TwitterMediaSize {
+export interface TwitterMediaSize {
   w: number;
   h: number;
   resize: string;
 }
 
-interface TwitterVideoInfo {
+export interface TwitterVideoInfo {
   aspect_ratio: number[];
   duration_millis: number;
   variants: TwitterVariants[];
 }
 
-interface TwitterVariants {
+export interface TwitterVariants {
   bitrate: number;
   content_type: string;
   url: string;
 }
 
-interface MastodonMedia {
+export interface MastodonMedia {
   id: string;
   type: 'unknown' | 'image' | 'gifv' | 'video' | 'audio';
   url: string;
@@ -110,18 +112,18 @@ interface MastodonMedia {
   blurhash: string;
 }
 
-interface MastodonImageMetaData extends MastodonMediaMetaDataBase {
+export interface MastodonImageMetaData extends MastodonMediaMetaDataBase {
   focus: {
     x: number;
     y: number;
   };
 }
 
-interface MastodonVideoMetaData
+export interface MastodonVideoMetaData
   extends MastodonGifvMetaData,
     MastodonAudioMetaData {}
 
-interface MastodonGifvMetaData
+export interface MastodonGifvMetaData
   extends MastodonMediaMetaDataBase,
     MastodonMediaSize {
   length: string;
@@ -129,7 +131,7 @@ interface MastodonGifvMetaData
   fps: number;
 }
 
-interface MastodonAudioMetaData extends MastodonMediaMetaDataBase {
+export interface MastodonAudioMetaData extends MastodonMediaMetaDataBase {
   length: string;
   duration: number;
   audio_encode: string;
@@ -137,15 +139,31 @@ interface MastodonAudioMetaData extends MastodonMediaMetaDataBase {
   audio_channels: string;
 }
 
-interface MastodonMediaMetaDataBase {
+export interface MastodonMediaMetaDataBase {
   original: MastodonMediaSize;
   small: MastodonMediaSize;
 }
 
-interface MastodonMediaSize {
+export interface MastodonMediaSize {
   width: number;
   height: number;
   size: string;
   aspect: number;
   frame_rate?: string;
+}
+
+export function isMastodonMemo(memo: any): memo is MastodonMemo {
+  return memo.provider !== 'twitter.com';
+}
+
+export function isTwitterMemo(memo: any): memo is TwitterMemo {
+  return memo.provider === 'twitter.com';
+}
+
+export function isMastodonMedia(media: any): media is MastodonMedia {
+  return 'type' in media && 'url' in media && 'preview_url' in media;
+}
+
+export function isTwitterMedia(media: any): media is TwitterMedia {
+  return 'display_url' in media && 'expanded_url' in media && 'id_str' in media;
 }

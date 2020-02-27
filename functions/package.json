@@ -16,27 +16,30 @@
   "main": "lib/index.js",
   "dependencies": {
     "@types/sinon": "^7.5.1",
-    "array.prototype.flatmap": "^1.2.2",
-    "firebase-admin": "^8.6.0",
+    "array.prototype.flatmap": "^1.2.3",
+    "firebase-admin": "^8.9.2",
     "firebase-functions": "^3.3.0",
-    "masto": "^2.8.1",
+    "masto": "^2.8.2",
     "moment": "^2.24.0",
+    "object.entries": "^1.1.1",
+    "object.fromentries": "^2.0.2",
+    "ogp-parser": "^0.4.4",
     "request": "^2.88.0",
     "request-promise": "^4.2.5",
-    "uuid": "^3.3.3"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.7",
-    "@types/request": "^2.48.3",
-    "@types/request-promise": "^4.1.44",
+    "@types/request": "^2.48.4",
+    "@types/request-promise": "^4.1.45",
     "chai": "^4.2.0",
     "firebase-functions-test": "^0.1.7",
     "mocha": "^6.2.2",
     "rewire": "^4.0.1",
     "sinon": "^7.5.0",
-    "ts-node": "^8.5.0",
+    "ts-node": "^8.6.2",
     "tslint": "^5.12.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.7.5"
   },
   "private": true
 }

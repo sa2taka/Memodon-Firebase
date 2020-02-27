@@ -21,6 +21,13 @@ service cloud.firestore {
       match /subusers/{subUserId} {
         allow read, write: if request.auth.uid == userID;
       }
+
+      match /labels/{labelID} {
+        allow read: if request.auth.uid == userID;
+        allow create, update: if request.auth.uid == userID 
+                     && request.resource.data.color.matches('#[0-9a-fA-F]{6}');
+        allow delete: if request.auth.uid == userID;
+      }
     }
 
     match /memos/{memoId} {

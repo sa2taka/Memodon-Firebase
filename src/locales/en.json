@@ -2,5 +2,6 @@
   "settings": "Settings",
   "account": "My Account",
   "users": "User",
-  "tags": "Label"
+  "tags": "Label",
+  "label": "Label"
 }

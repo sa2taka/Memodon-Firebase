@@ -31,7 +31,8 @@ export default class AuthWithMastodon extends Vue {
 
   public gotoAuthPage() {
     const getMastodonClientInfo = firebase
-      .functions()
+      .app()
+      .functions('asia-northeast1')
       .httpsCallable('getMastodonClientInfo');
     this.isLoading = true;
 

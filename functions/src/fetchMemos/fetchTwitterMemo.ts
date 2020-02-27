@@ -25,6 +25,7 @@ export default function fetchTwitterMemo(
           ),
           text: value.text,
           entities,
+          extendedEntities: value.extended_entities || [],
           provider: 'twitter.com',
           providerId: twitterId,
           createdAt: firestore.FieldValue.serverTimestamp(),
