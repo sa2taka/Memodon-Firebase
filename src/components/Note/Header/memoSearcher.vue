@@ -76,8 +76,9 @@ export default class memoSearcher extends Vue {
   @Emit('input')
   private input(query: { words: string[]; inputingWord: string }) {
     // search ～ は参照先がMemoSearchQueryなので===で比較可能
+
     if (Query.words !== this.searchWords) {
-      Query.setWords(this.searchWords);
+      Query.setWords(this.searchWords.filter((word) => word.length >= 2));
     }
     // なぜかsearchがnullになるため三項演算子を利用する
     const formatedSearching = this.search
