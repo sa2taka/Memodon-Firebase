@@ -9,6 +9,16 @@
     hide-selected
     small-chips
   >
+    <template v-slot:no-data>
+      <v-btn
+        @click="$router.push({ name: 'setting-tags' })"
+        small
+        class="ml-3"
+        color="primary"
+        >{{ $t('config-label') }}</v-btn
+      >
+    </template>
+
     <template v-slot:selection="{ item, parent }">
       <v-chip v-if="item === Object(item)" :color="item.color" small>
         <span class="pr-2">{{ item.text }}</span>
@@ -63,13 +73,15 @@ export default class LabelSelection extends Vue {
     "edit-label": "Edit Label",
     "label": "Label",
     "close": "Close",
-    "save": "Save"
+    "save": "Save",
+    "config-label": "Label Setting"
   },
   "jp": {
     "edit-label": "ラベルの編集",
     "label": "ラベル",
     "close": "閉じる",
-    "save": "保存"
+    "save": "保存",
+    "config-label": "ラベル設定"
   }
 }
 </i18n>
