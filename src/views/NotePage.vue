@@ -7,7 +7,7 @@
       @prev="prev"
       :isFirstPage="isFirstPage"
       :isLastPage="isLastPage"
-      :disableNextButton="isFetching"
+      :fetching="isFetching"
     />
 
     <note
@@ -17,6 +17,15 @@
       v-show="index === page"
       :visible="index === page"
     ></note>
+    <paging-button-area
+      class="my-3"
+      @next="next"
+      @prev="prev"
+      :isFirstPage="isFirstPage"
+      :isLastPage="isLastPage"
+      :fetching="isFetching"
+    />
+    <div class="empty" />
   </v-container>
 </template>
 
@@ -228,11 +237,6 @@ export default class NotePage extends Vue {
   }
 
   get isLastPage() {
-    console.log(
-      this.isAllMemoCrawled,
-      Math.ceil(this.note.length / this.per) - 1,
-      this.page
-    );
     return (
       this.isAllMemoCrawled &&
       Math.ceil(this.note.length / this.per) - 1 <= this.page
@@ -241,4 +245,14 @@ export default class NotePage extends Vue {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.empty {
+  height: 20vh;
+  width: 100%;
+}
+
+// HACK
+#app {
+  overflow: hidden;
+}
+</style>

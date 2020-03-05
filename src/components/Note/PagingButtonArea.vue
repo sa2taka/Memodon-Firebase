@@ -2,12 +2,9 @@
   <v-row>
     <v-btn @click="$emit('prev')" v-show="!isFirstPage">{{ $t('prev') }}</v-btn>
     <v-spacer />
-    <v-btn
-      @click="$emit('next')"
-      v-show="!isLastPage"
-      :disabled="disableNextButton"
-      >{{ $t('next') }}</v-btn
-    >
+    <v-btn @click="$emit('next')" v-show="!isLastPage" :loading="fetching">{{
+      $t('next')
+    }}</v-btn>
   </v-row>
 </template>
 
@@ -22,7 +19,7 @@ export default class PagingButtonArea extends Vue {
   @Prop()
   isFirstPage!: boolean;
   @Prop()
-  disableNextButton!: boolean;
+  fetching!: boolean;
 }
 </script>
 
