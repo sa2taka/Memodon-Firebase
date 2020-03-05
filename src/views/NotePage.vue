@@ -7,7 +7,8 @@
       @prev="prev"
       :isFirstPage="isFirstPage"
       :isLastPage="isLastPage"
-      :fetching="isFetching"
+      :fetching="isFetching && isLastPageInFetching"
+      v-show="note.length !== 0"
     />
 
     <note
@@ -23,7 +24,8 @@
       @prev="prev"
       :isFirstPage="isFirstPage"
       :isLastPage="isLastPage"
-      :fetching="isFetching"
+      :fetching="isFetching && isLastPageInFetching"
+      v-show="note.length !== 0"
     />
     <div class="empty" />
   </v-container>
@@ -215,7 +217,9 @@ export default class NotePage extends Vue {
   next() {
     if (!this.isLastPage) {
       this.page += 1;
-      this.fetchNextPage();
+      if (this.isLastPageInFetching) {
+        this.fetchNextPage();
+      }
     }
   }
 
@@ -236,11 +240,12 @@ export default class NotePage extends Vue {
     return this.page <= 0;
   }
 
+  get isLastPageInFetching() {
+    return Math.ceil(this.note.length / this.per) - 1 <= this.page;
+  }
+
   get isLastPage() {
-    return (
-      this.isAllMemoCrawled &&
-      Math.ceil(this.note.length / this.per) - 1 <= this.page
-    );
+    return this.isAllMemoCrawled && this.isLastPageInFetching;
   }
 }
 </script>
