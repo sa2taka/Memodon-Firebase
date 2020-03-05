@@ -1,7 +1,14 @@
 <template>
   <v-container justify="center" mt-9>
     <note-header :tagsRef="tagsRef" :userRef="userRef"></note-header>
-    <note :note="filtered" v-if="note.length !== 0"></note>
+    <paging-button-area
+      class="my-3"
+      @next="next"
+      @prev="prev"
+      :isFirstPage="isFirstPage"
+      :isLastPage="isLastPage"
+    />
+    <note :note="pagingNote" v-if="note.length !== 0"></note>
   </v-container>
 </template>
 
@@ -9,6 +16,7 @@
 import { Component, Watch, Vue } from 'vue-property-decorator';
 import Note from '@/components/Note/Note.vue';
 import NoteHeader from '@/components/Note/Header.vue';
+import PagingButtonArea from '@/components/Note/PagingButtonArea.vue';
 
 import firebase from '@/firebase';
 
@@ -18,7 +26,7 @@ import SearchQuery from '@/store/modules/memoSearchQuery';
 import MemoSearcher from '@/libs/memoSearcher';
 
 @Component({
-  components: { Note, NoteHeader },
+  components: { Note, NoteHeader, PagingButtonArea },
 })
 export default class NotePage extends Vue {
   private note: Array<Memo> = [];
@@ -32,7 +40,9 @@ export default class NotePage extends Vue {
 
   private isAllMemoCrawled = false;
   private isFetching = false;
-  private ticking = false;
+  private isFirst = true;
+  private page = 0;
+  private per = 40;
 
   public created() {
     this.fetchNote();
@@ -40,17 +50,16 @@ export default class NotePage extends Vue {
     this.subscribeQuery();
   }
 
-  mounted() {
-    this.subscribeScroll();
-  }
-
-  beforeDestroy() {
-    this.unsubscribeScroll();
-  }
-
   @Watch('note')
   private onUpdateNote() {
     this.searcher.updateMemos(this.note);
+  }
+
+  public get pagingNote() {
+    return this.filtered.slice(
+      this.page * this.per,
+      (this.page + 1) * this.per
+    );
   }
 
   private fetchNote() {
@@ -72,6 +81,10 @@ export default class NotePage extends Vue {
       if (mutation.type.startsWith('memoSearchQuery')) {
         this.searcher.search(this.queries()).then((filtered: any) => {
           this.filtered = filtered;
+          if (!this.isFetching && !this.isFirst && filtered.length < this.per) {
+            this.isFetching = true;
+            this.fetchNote();
+          }
         });
       }
     });
@@ -102,31 +115,49 @@ export default class NotePage extends Vue {
       .collection('users')
       .doc(uid)
       .collection('memos')
-      .orderBy('timestamp', 'desc')
-      .limit(40);
+      .orderBy('timestamp', 'desc');
 
     if (this.end) {
       ref = ref.startAfter(this.end);
     }
+    ref = ref.limit(this.per);
 
-    ref.onSnapshot((snapshots) => {
+    ref.get().then((snapshots) => {
       if (snapshots.empty) {
-        this.isAllMemoCrawled = false;
+        this.isAllMemoCrawled = true;
+        this.isFetching = false;
         return;
       }
 
       snapshots.forEach((snapshot) => {
-        this.end = snapshot;
+        this.end = snapshot.data().timestamp;
         const data = snapshot.data();
         data.firebaseId = snapshot.id;
         this.note.push(data as Memo);
       });
-      this.filtered = this.note;
-      this.isFetching = false;
+
+      this.searcher.search(this.queries()).then((filtered: any) => {
+        this.filtered = filtered;
+        this.isFetching = false;
+
+        if (this.isFirst && this.note.length < this.per) {
+          this.isFirst = false;
+          this.isAllMemoCrawled = true;
+        } else if (this.isFirst) {
+          this.isFirst = false;
+          this.isFetching = true;
+          this.fetchNote();
+        } else {
+          if (filtered.length < this.per) {
+            this.isFetching = true;
+            this.fetchNote();
+          }
+        }
+      });
     });
   }
 
-  // Do no use get(computed property) to prevent cache
+  // Do not use get(computed property) to prevent cache
   private queries() {
     const queries: string[] = [];
     if (SearchQuery.words) {
@@ -153,34 +184,40 @@ export default class NotePage extends Vue {
     return str.replace(/^\s+/g, '').replace(/\s+$/g, '') !== '';
   }
 
-  subscribeScroll() {
-    document.addEventListener('scroll', this.handleScroll, { passive: true });
-  }
-
-  unsubscribeScroll() {
-    document.removeEventListener('scroll', this.handleScroll);
-  }
-
-  handleScroll(event: Event) {
-    const lastScrollPosition = window.scrollY;
-    const windowHeight = window.innerHeight;
-    const pageHeight = document.documentElement.scrollHeight;
-
-    if (!this.ticking) {
-      window.requestAnimationFrame(() => {
-        if (
-          !this.isAllMemoCrawled &&
-          !this.isFetching &&
-          pageHeight - windowHeight * 3 < lastScrollPosition
-        ) {
-          this.isFetching = true;
-          this.fetchNote();
-        }
-        this.ticking = false;
-      });
-
-      this.ticking = true;
+  next() {
+    if (!this.isLastPage) {
+      this.page += 1;
+      this.fetchNextPage();
     }
+  }
+
+  prev() {
+    if (!this.isFirstPage) {
+      this.page -= 1;
+    }
+  }
+
+  fetchNextPage() {
+    if (!this.isAllMemoCrawled && !this.isFetching) {
+      this.isFetching = true;
+      this.fetchNote();
+    }
+  }
+
+  get isFirstPage() {
+    return this.page <= 0;
+  }
+
+  get isLastPage() {
+    console.log(
+      this.isAllMemoCrawled,
+      Math.ceil(this.note.length / this.per) - 1,
+      this.page
+    );
+    return (
+      this.isAllMemoCrawled &&
+      Math.ceil(this.note.length / this.per) - 1 <= this.page
+    );
   }
 }
 </script>
