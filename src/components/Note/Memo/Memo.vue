@@ -1,17 +1,15 @@
 <template>
-  <v-lazy v-model="isActive" min-height="280">
-    <v-card class="mx-2 mt-4 pa-3">
-      <label-list
-        :labels="labels"
-        :specifiedLabels="specifiedLabels"
-        :memoId="memo.firebaseId"
-      ></label-list>
-      <twitter-memo :memo="memo" v-if="isTwitterMemo(memo)"></twitter-memo>
-      <mastodon-memo :memo="memo" v-else></mastodon-memo>
-      <ogp :url="firstUrl" v-if="firstUrl" @display="setGridRow(true)"></ogp>
-      <media-area :memo="memo"></media-area>
-    </v-card>
-  </v-lazy>
+  <v-card class="mx-2 mt-4 pa-3">
+    <label-list
+      :labels="labels"
+      :specifiedLabels="specifiedLabels"
+      :memoId="memo.firebaseId"
+    ></label-list>
+    <twitter-memo :memo="memo" v-if="isTwitterMemo(memo)"></twitter-memo>
+    <mastodon-memo :memo="memo" v-else></mastodon-memo>
+    <ogp :url="firstUrl" v-if="firstUrl"></ogp>
+    <media-area :memo="memo"></media-area>
+  </v-card>
 </template>
 
 <script lang="ts">
@@ -74,12 +72,11 @@ export default class Memo extends Vue {
     }
   }
 
-  public setGridRow(containsOgp?: boolean) {
+  public setGridRow() {
     if (this.$el.scrollHeight !== 0) {
       // Height is changed with hard-coded value because the display collapses when ogp is displayed
-      const height = containsOgp
-        ? this.$el.scrollHeight + 108
-        : this.$el.scrollHeight;
+      // memo that have firstUrl is likely to contain OGP
+      const height = this.$el.scrollHeight;
       this.$el.setAttribute(
         'style',
         `grid-row: span ${Math.ceil(height / 20)};height: ${height}px;`

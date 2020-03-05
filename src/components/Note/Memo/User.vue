@@ -9,7 +9,7 @@
   <v-skeleton-loader
     ref="skeleton"
     type="list-item-avatar-two-line"
-    class="mx-auto"
+    class="mx-auto user-skelton"
     v-else
   ></v-skeleton-loader>
 </template>
@@ -69,7 +69,7 @@ export default class User extends Vue {
 }
 
 .user-skelton {
-  height: 48px;
+  height: 50px;
   width: 100%;
 }
 </style>

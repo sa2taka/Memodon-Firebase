@@ -1,6 +1,6 @@
 <template>
-  <transition name="fade">
-    <article class="inline-ogp" v-if="visible">
+  <transition name="fade" v-if="visible">
+    <article class="inline-ogp">
       <div class="inline-ogp_left-bar"></div>
       <figure class="ogp-icon">
         <v-img width="64" height="64" :src="image" />
@@ -12,6 +12,7 @@
       </p>
     </article>
   </transition>
+  <div v-else class="ogp-dummy" />
 </template>
 
 <script lang="ts">
@@ -121,5 +122,9 @@ $bottom-height: 70px;
     transform: translateY(-20px);
     opacity: 0;
   }
+}
+
+.ogp-dummy {
+  height: 108px;
 }
 </style>

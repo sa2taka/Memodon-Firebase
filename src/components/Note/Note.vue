@@ -66,7 +66,7 @@ export default class Note extends Vue {
 }
 
 .memo {
-  min-width: 280px;
+  min-width: 200px;
   display: inline-block;
   transition: opacity 0.4s;
   box-sizing: border-box;
