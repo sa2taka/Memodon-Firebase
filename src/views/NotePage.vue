@@ -217,6 +217,7 @@ export default class NotePage extends Vue {
   next() {
     if (!this.isLastPage) {
       this.page += 1;
+      this.upToTop();
       if (this.isLastPageInFetching) {
         this.fetchNextPage();
       }
@@ -226,6 +227,7 @@ export default class NotePage extends Vue {
   prev() {
     if (!this.isFirstPage) {
       this.page -= 1;
+      this.upToTop();
     }
   }
 
@@ -246,6 +248,10 @@ export default class NotePage extends Vue {
 
   get isLastPage() {
     return this.isAllMemoCrawled && this.isLastPageInFetching;
+  }
+
+  upToTop() {
+    scrollTo(0, 0);
   }
 }
 </script>
