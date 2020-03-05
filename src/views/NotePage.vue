@@ -7,8 +7,16 @@
       @prev="prev"
       :isFirstPage="isFirstPage"
       :isLastPage="isLastPage"
+      :disableNextButton="isFetching"
     />
-    <note :note="pagingNote" v-if="note.length !== 0"></note>
+
+    <note
+      :note="pagingNote"
+      v-for="(pagingNote, index) in splitNote"
+      :key="index"
+      v-show="index === page"
+      :visible="index === page"
+    ></note>
   </v-container>
 </template>
 
@@ -55,11 +63,22 @@ export default class NotePage extends Vue {
     this.searcher.updateMemos(this.note);
   }
 
-  public get pagingNote() {
-    return this.filtered.slice(
-      this.page * this.per,
-      (this.page + 1) * this.per
+  public get splitNote() {
+    const array = this.note.slice();
+    console.log(this.split(array, this.per));
+    return this.split(array, this.per);
+  }
+
+  private split(array: any[], length: number) {
+    return array.reduce(
+      (acc: any[][], c, i) =>
+        i % length !== 0 ? acc : [...acc, array.slice(i, i + length)],
+      []
     );
+  }
+
+  private divideNote(page: number) {
+    return this.filtered.slice(page * this.per, (page + 1) * this.per);
   }
 
   private fetchNote() {

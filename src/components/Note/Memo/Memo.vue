@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
 
 import TwitterMemo from '@/components/Note/Memo/TwitterMemo.vue';
 import MastodonMemo from '@/components/Note/Memo/MastodonMemo.vue';
@@ -34,10 +34,17 @@ import { Label } from '@/types/label';
 export default class Memo extends Vue {
   @Prop({ required: true })
   public memo!: IMemo;
+  @Prop()
+  public visible!: boolean;
 
   public mounted() {
-    this.setGridRow();
     this.registerMemoTagClickListener();
+    this.setGridRow();
+  }
+
+  @Watch('visible')
+  private onChangeVisible() {
+    this.setGridRow();
   }
 
   public isTwitterMemo(memo: TwitterMemo | MastodonMemo) {
@@ -64,14 +71,16 @@ export default class Memo extends Vue {
   }
 
   public setGridRow(containsOgp?: boolean) {
-    // Height is changed with hard-coded value because the display collapses when ogp is displayed
-    const height = containsOgp
-      ? this.$el.scrollHeight + 108
-      : this.$el.scrollHeight;
-    this.$el.setAttribute(
-      'style',
-      `grid-row: span ${Math.ceil(height / 20)};height: ${height}px;`
-    );
+    if (this.$el.scrollHeight !== 0) {
+      // Height is changed with hard-coded value because the display collapses when ogp is displayed
+      const height = containsOgp
+        ? this.$el.scrollHeight + 108
+        : this.$el.scrollHeight;
+      this.$el.setAttribute(
+        'style',
+        `grid-row: span ${Math.ceil(height / 20)};height: ${height}px;`
+      );
+    }
   }
 
   public get labels(): Label[] {

@@ -5,6 +5,7 @@
         :memo="memo"
         v-for="memo in note"
         :key="memo.providerId + memo.id"
+        :visible="visible"
         class="memo"
       ></memo>
     </transition-group>
@@ -27,6 +28,8 @@ import { Label } from '@/types/label';
 export default class Note extends Vue {
   @Prop({ required: true })
   public note: Array<IMemo> | undefined;
+  @Prop()
+  public visible!: boolean;
   private grid: any;
 
   public created() {
@@ -65,23 +68,17 @@ export default class Note extends Vue {
 .memo {
   min-width: 280px;
   display: inline-block;
-  transition: all 0.4s;
+  transition: opacity 0.4s;
   box-sizing: border-box;
 }
 
 .memo-list {
-  &-enter {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-
+  &-enter,
   &-leave-to {
     opacity: 0;
-    transform: translateX(20px);
   }
 
   &-leave-active {
-    position: absolute;
     z-index: -9999;
   }
 }
