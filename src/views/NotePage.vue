@@ -8,7 +8,7 @@
       :isFirstPage="isFirstPage"
       :isLastPage="isLastPage"
       :fetching="isFetching && isLastPageInFetching"
-      v-show="note.length !== 0"
+      v-show="filtered.length !== 0"
     />
 
     <note
@@ -25,7 +25,7 @@
       :isFirstPage="isFirstPage"
       :isLastPage="isLastPage"
       :fetching="isFetching && isLastPageInFetching"
-      v-show="note.length !== 0"
+      v-show="filtered.length !== 0"
     />
     <div class="empty" />
   </v-container>

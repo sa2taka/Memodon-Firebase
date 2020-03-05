@@ -1,15 +1,17 @@
 <template>
-  <v-card class="mx-2 mt-4 pa-3">
-    <label-list
-      :labels="labels"
-      :specifiedLabels="specifiedLabels"
-      :memoId="memo.firebaseId"
-    ></label-list>
-    <twitter-memo :memo="memo" v-if="isTwitterMemo(memo)"></twitter-memo>
-    <mastodon-memo :memo="memo" v-else></mastodon-memo>
-    <ogp :url="firstUrl" v-if="firstUrl" @display="setGridRow(true)"></ogp>
-    <media-area :memo="memo"></media-area>
-  </v-card>
+  <v-lazy v-model="isActive" min-height="280">
+    <v-card class="mx-2 mt-4 pa-3">
+      <label-list
+        :labels="labels"
+        :specifiedLabels="specifiedLabels"
+        :memoId="memo.firebaseId"
+      ></label-list>
+      <twitter-memo :memo="memo" v-if="isTwitterMemo(memo)"></twitter-memo>
+      <mastodon-memo :memo="memo" v-else></mastodon-memo>
+      <ogp :url="firstUrl" v-if="firstUrl" @display="setGridRow(true)"></ogp>
+      <media-area :memo="memo"></media-area>
+    </v-card>
+  </v-lazy>
 </template>
 
 <script lang="ts">
@@ -36,6 +38,8 @@ export default class Memo extends Vue {
   public memo!: IMemo;
   @Prop()
   public visible!: boolean;
+
+  isActive = false;
 
   public mounted() {
     this.registerMemoTagClickListener();
