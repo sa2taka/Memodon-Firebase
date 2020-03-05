@@ -65,7 +65,7 @@ export default class MemoSearcher {
   }
 
   private sortMemo(memos: Memo[]) {
-    return memos.sort((a, b) => (a.timestamp > b.timestamp ? 1 : -1));
+    return memos.sort((a, b) => (a.timestamp > b.timestamp ? -1 : 1));
   }
 
   private get initialIndex() {

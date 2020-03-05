@@ -75,8 +75,7 @@ export default class NotePage extends Vue {
   }
 
   public get splitNote() {
-    const array = this.note.slice();
-    console.log(this.split(array, this.per));
+    const array = this.filtered.slice();
     return this.split(array, this.per);
   }
 
@@ -111,6 +110,7 @@ export default class NotePage extends Vue {
       if (mutation.type.startsWith('memoSearchQuery')) {
         this.searcher.search(this.queries()).then((filtered: any) => {
           this.filtered = filtered;
+          this.page = 0;
           if (!this.isFetching && !this.isFirst && filtered.length < this.per) {
             this.isFetching = true;
             this.fetchNote();
@@ -241,7 +241,7 @@ export default class NotePage extends Vue {
   }
 
   get isLastPageInFetching() {
-    return Math.ceil(this.note.length / this.per) - 1 <= this.page;
+    return Math.ceil(this.filtered.length / this.per) - 1 <= this.page;
   }
 
   get isLastPage() {

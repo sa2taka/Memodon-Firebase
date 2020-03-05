@@ -67,7 +67,6 @@ $bottom-height: 70px;
   position: relative;
   cursor: pointer;
   width: 100%;
-  height: 100%;
   display: grid;
   grid-template-columns: 24px 70px 1fr;
   grid-template-rows: $top-height $bottom-height;
