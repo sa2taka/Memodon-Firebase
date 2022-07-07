@@ -20,7 +20,7 @@
     "firebase-admin": "^8.9.2",
     "firebase-functions": "^3.3.0",
     "masto": "^2.8.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "object.entries": "^1.1.1",
     "object.fromentries": "^2.0.2",
     "ogp-parser": "^0.4.4",
