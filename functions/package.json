@@ -34,7 +34,7 @@
     "@types/request-promise": "^4.1.45",
     "chai": "^4.2.0",
     "firebase-functions-test": "^0.1.7",
-    "mocha": "^6.2.2",
+    "mocha": "^10.2.0",
     "rewire": "^4.0.1",
     "sinon": "^7.5.0",
     "ts-node": "^8.6.2",
